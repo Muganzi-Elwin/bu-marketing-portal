@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Academic Programs</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <style>
+    body {
+      background: #f7f9fc;
+    }
+
+    .page-container {
+      max-width: 1140px;
+    }
+
+    .filter-card,
+    .school-card {
+      border: 1px solid #e2e8f0;
+      border-radius: 1rem;
+    }
+
+    .toggle-button {
+      background: #fff;
+      border: 0;
+      color: #102a43;
+      transition: background-color 0.2s ease;
+    }
+
+    .toggle-button:hover {
+      background: #f8fafc;
+    }
+
+    .department-row {
+      border-top: 1px solid #e2e8f0;
+    }
+
+    .level-group {
+      background: #f8fafc;
+      border-top: 1px solid #e2e8f0;
+    }
+
+    .program-row {
+      background: #fff;
+      border-top: 1px solid #e9eef5;
+    }
+
+    .program-row:first-child {
+      border-top: 0;
+    }
+
+    .toggle-symbol {
+      width: 2rem;
+      height: 2rem;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      background: #edf4ff;
+      color: #0b5ed7;
+      font-weight: 700;
+    }
+  </style>
+</head>
+<body>
+
+<%- include('partials/navbar') %>
+
+<% const data = typeof programsData !== "undefined" ? programsData : []; %>
+
+<main class="container page-container py-5">
+  <h1 class="display-5 fw-bold mb-5">Academic Programs</h1>
+
+  <section class="filter-card bg-white shadow-sm p-4 mb-5">
+    <h2 class="h4 fw-bold mb-4">Search &amp; Filter</h2>
+
+    <div class="mb-4">
+      <label for="programSearch" class="form-label">Search Programs:</label>
+      <input type="text" id="programSearch" class="form-control form-control-lg" placeholder="Enter program name...">
+    </div>
+
+    <div class="row g-3">
+      <div class="col-12 col-md-4">
+        <label for="schoolFilter" class="form-label">Filter by School:</label>
+        <select id="schoolFilter" class="form-select form-select-lg">
+          <option value="">All Schools</option>
+          <% data.forEach((school) => { %>
+            <option value="<%= school.id %>"><%= school.name %></option>
+          <% }) %>
+        </select>
+      </div>
+
+      <div class="col-12 col-md-4">
+        <label for="departmentFilter" class="form-label">Filter by Department:</label>
+        <select id="departmentFilter" class="form-select form-select-lg">
+          <option value="">All Departments</option>
+          <% data.forEach((school) => { %>
+            <% school.departments.forEach((department) => { %>
+              <option value="<%= department.id %>"><%= department.name %></option>
+            <% }) %>
+          <% }) %>
+        </select>
+      </div>
+
+      <div class="col-12 col-md-4">
+        <label for="levelFilter" class="form-label">Filter by Academic Level:</label>
+        <select id="levelFilter" class="form-select form-select-lg">
+          <option value="">All Levels</option>
+          <% const levels = [...new Set(data.flatMap((school) => school.departments.flatMap((department) => Object.keys(department.programs))))]; %>
+          <% levels.forEach((level) => { %>
+            <option value="<%= level %>"><%= level %></option>
+          <% }) %>
+        </select>
+      </div>
+    </div>
+  </section>
+
+  <section id="schoolsList" class="d-grid gap-4">
+    <% if (data.length === 0) { %>
+      <div class="alert alert-light border shadow-sm mb-0">No programs found.</div>
+    <% } %>
+
+    <% data.forEach((school, schoolIndex) => { %>
+      <div class="school-card bg-white shadow-sm overflow-hidden" data-school-card data-school-id="<%= school.id %>">
+        <button type="button" class="toggle-button w-100 p-4 text-start d-flex align-items-center justify-content-between" data-toggle-school="school-<%= schoolIndex %>">
+          <span class="h4 fw-bold mb-0"><%= school.name %></span>
+          <span class="toggle-symbol">+</span>
+        </button>
+
+        <div class="border-top d-none" id="school-<%= schoolIndex %>">
+          <% school.departments.forEach((department, departmentIndex) => { %>
+            <div class="department-row" data-department-section data-department-id="<%= department.id %>">
+              <button type="button" class="toggle-button w-100 p-3 ps-md-5 text-start d-flex align-items-center justify-content-between" data-toggle-department="department-<%= schoolIndex %>-<%= departmentIndex %>">
+                <span class="h5 mb-0"><%= department.name %></span>
+                <span class="toggle-symbol">+</span>
+              </button>
+
+              <div class="level-group d-none" id="department-<%= schoolIndex %>-<%= departmentIndex %>">
+                <% Object.entries(department.programs).forEach(([level, programs]) => { %>
+                  <div class="border-top" data-level-section data-level="<%= level %>">
+                    <div class="px-4 px-md-5 py-3 fw-semibold text-primary bg-light"><%= level %></div>
+
+                    <% programs.forEach((program) => { %>
+                      <div class="program-row p-3 p-md-4 ps-md-5 d-flex flex-column flex-sm-row align-items-sm-center justify-content-between gap-3" data-program-row data-program-name="<%= program.name.toLowerCase() %>">
+                        <span class="fw-medium"><%= program.name %></span>
+                        <a href="/programs/<%= program.id %>" class="btn btn-outline-primary btn-sm px-4">View Details</a>
+                      </div>
+                    <% }) %>
+                  </div>
+                <% }) %>
+              </div>
+            </div>
+          <% }) %>
+        </div>
+      </div>
+    <% }) %>
+  </section>
+
+  <% if (typeof errorMessage !== "undefined") { %>
+    <div class="alert alert-danger mt-4"><%= errorMessage %></div>
+  <% } %>
+</main>
+
+<%- include('partials/footer') %>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+  const searchInput = document.getElementById("programSearch");
+  const schoolFilter = document.getElementById("schoolFilter");
+  const departmentFilter = document.getElementById("departmentFilter");
+  const levelFilter = document.getElementById("levelFilter");
+  const schoolsList = document.getElementById("schoolsList");
+
+  function filterPrograms() {
+    const searchTerm = searchInput.value.trim().toLowerCase();
+    const selectedSchool = schoolFilter.value;
+    const selectedDepartment = departmentFilter.value;
+    const selectedLevel = levelFilter.value;
+
+    document.querySelectorAll("[data-school-card]").forEach((schoolCard) => {
+      const schoolMatches = !selectedSchool || schoolCard.dataset.schoolId === selectedSchool;
+      let hasVisibleDepartment = false;
+
+      schoolCard.querySelectorAll("[data-department-section]").forEach((departmentSection) => {
+        const departmentMatches = !selectedDepartment || departmentSection.dataset.departmentId === selectedDepartment;
+        let hasVisibleLevel = false;
+
+        departmentSection.querySelectorAll("[data-level-section]").forEach((levelSection) => {
+          const levelMatches = !selectedLevel || levelSection.dataset.level === selectedLevel;
+          let hasVisibleProgram = false;
+
+          levelSection.querySelectorAll("[data-program-row]").forEach((programRow) => {
+            const programMatches = !searchTerm || programRow.dataset.programName.includes(searchTerm);
+            const isVisible = levelMatches && programMatches;
+            programRow.classList.toggle("d-none", !isVisible);
+
+            if (isVisible) {
+              hasVisibleProgram = true;
+            }
+          });
+
+          levelSection.classList.toggle("d-none", !hasVisibleProgram);
+
+          if (hasVisibleProgram) {
+            hasVisibleLevel = true;
+          }
+        });
+
+        const departmentVisible = schoolMatches && departmentMatches && hasVisibleLevel;
+        departmentSection.classList.toggle("d-none", !departmentVisible);
+
+        if (departmentVisible) {
+          hasVisibleDepartment = true;
+        }
+      });
+
+      schoolCard.classList.toggle("d-none", !(schoolMatches && hasVisibleDepartment));
+    });
+  }
+
+  document.querySelectorAll("[data-toggle-school]").forEach((button) => {
+    button.addEventListener("click", () => {
+      const target = document.getElementById(button.dataset.toggleSchool);
+      const symbol = button.querySelector(".toggle-symbol");
+      target.classList.toggle("d-none");
+      symbol.textContent = target.classList.contains("d-none") ? "+" : "-";
+    });
+  });
+
+  document.querySelectorAll("[data-toggle-department]").forEach((button) => {
+    button.addEventListener("click", () => {
+      const target = document.getElementById(button.dataset.toggleDepartment);
+      const symbol = button.querySelector(".toggle-symbol");
+      target.classList.toggle("d-none");
+      symbol.textContent = target.classList.contains("d-none") ? "+" : "-";
+    });
+  });
+
+  [searchInput, schoolFilter, departmentFilter, levelFilter].forEach((element) => {
+    element.addEventListener("input", filterPrograms);
+    element.addEventListener("change", filterPrograms);
+  });
+
+  filterPrograms();
+</script>
+</body>
+</html>

@@ -143,7 +143,7 @@
                     <% programs.forEach((program) => { %>
                       <div class="program-row p-3 p-md-4 ps-md-5 d-flex flex-column flex-sm-row align-items-sm-center justify-content-between gap-3" data-program-row data-program-name="<%= program.name.toLowerCase() %>">
                         <span class="fw-medium"><%= program.name %></span>
-                        <a href="/programs/<%= program.id %>" class="btn btn-outline-primary btn-sm px-4">View Details</a>
+                        <a href="/programs/<%= program._id %>" class="btn btn-outline-primary btn-sm px-4">View Details</a>
                       </div>
                     <% }) %>
                   </div>

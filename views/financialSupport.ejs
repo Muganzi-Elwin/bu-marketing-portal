@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Scholarships &amp; Bursaries</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <style>
+    body {
+      background: #f7f9fc;
+    }
+
+    .support-container {
+      max-width: 1100px;
+    }
+
+    .support-card {
+      border: 0;
+      border-radius: 1rem;
+    }
+  </style>
+</head>
+<body>
+
+<%- include('partials/navbar') %>
+
+<main class="container support-container py-5">
+  <div class="text-center mb-5">
+    <h1 class="fw-bold mb-2">Scholarships &amp; Bursaries</h1>
+    <p class="text-muted fs-5 mb-0">Financial Support for Students</p>
+  </div>
+
+  <ul class="nav nav-tabs justify-content-center mb-4" id="financialSupportTabs" role="tablist">
+    <li class="nav-item" role="presentation">
+      <button class="nav-link active" id="scholarships-tab" data-bs-toggle="tab" data-bs-target="#scholarships-pane" type="button" role="tab" aria-controls="scholarships-pane" aria-selected="true">Scholarships</button>
+    </li>
+    <li class="nav-item" role="presentation">
+      <button class="nav-link" id="bursaries-tab" data-bs-toggle="tab" data-bs-target="#bursaries-pane" type="button" role="tab" aria-controls="bursaries-pane" aria-selected="false">Bursaries</button>
+    </li>
+  </ul>
+
+  <div class="tab-content" id="financialSupportTabContent">
+    <section class="tab-pane fade show active" id="scholarships-pane" role="tabpanel" aria-labelledby="scholarships-tab" tabindex="0">
+      <div class="row g-4">
+        <div class="col-12 col-md-6">
+          <div class="card support-card shadow-sm h-100">
+            <div class="card-body p-4">
+              <h2 class="h4 fw-bold mb-3">Academic Excellence Scholarship</h2>
+              <p class="text-muted mb-3">Support for students with outstanding academic performance and strong commitment to learning.</p>
+              <p class="mb-2"><span class="fw-semibold">Eligibility:</span> Excellent academic records and admission into an eligible program.</p>
+              <p class="mb-4"><span class="fw-semibold">Coverage:</span> Partial tuition support based on academic merit.</p>
+              <a href="/scholarships/academic" class="btn btn-primary w-100">Apply Now</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-12 col-md-6">
+          <div class="card support-card shadow-sm h-100">
+            <div class="card-body p-4">
+              <h2 class="h4 fw-bold mb-3">Sports Scholarship</h2>
+              <p class="text-muted mb-3">Support for talented student athletes who can contribute to university sports programs.</p>
+              <p class="mb-2"><span class="fw-semibold">Eligibility:</span> Demonstrated sports talent and active participation in competitive athletics.</p>
+              <p class="mb-4"><span class="fw-semibold">Coverage:</span> Partial tuition support and sports program assistance.</p>
+              <a href="/scholarships/sports" class="btn btn-primary w-100">Apply Now</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="tab-pane fade" id="bursaries-pane" role="tabpanel" aria-labelledby="bursaries-tab" tabindex="0">
+      <div class="row g-4">
+        <div class="col-12 col-md-6">
+          <div class="card support-card shadow-sm h-100">
+            <div class="card-body p-4">
+              <h2 class="h4 fw-bold mb-3">Needy-Based Bursary</h2>
+              <p class="text-muted mb-3">Financial assistance for students who need support to continue their education.</p>
+              <p class="mb-2"><span class="fw-semibold">Eligibility:</span> Demonstrated financial need and admission into an eligible program.</p>
+              <p class="mb-4"><span class="fw-semibold">Coverage:</span> Partial tuition support based on assessed need.</p>
+              <a href="/bursaries/needy" class="btn btn-primary w-100">Apply Now</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-12 col-md-6">
+          <div class="card support-card shadow-sm h-100">
+            <div class="card-body p-4">
+              <h2 class="h4 fw-bold mb-3">Church Sponsorship</h2>
+              <p class="text-muted mb-3">Support for students sponsored through church communities and affiliated organizations.</p>
+              <p class="mb-2"><span class="fw-semibold">Eligibility:</span> Church recommendation and verified sponsorship need.</p>
+              <p class="mb-4"><span class="fw-semibold">Coverage:</span> Tuition or study support based on sponsorship approval.</p>
+              <a href="/bursaries/church" class="btn btn-primary w-100">Apply Now</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+</main>
+
+<%- include('partials/footer') %>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

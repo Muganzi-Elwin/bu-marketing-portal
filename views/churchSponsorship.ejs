@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Church Sponsorship</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <style>
+    body {
+      background: #f7f9fc;
+    }
+
+    .bursary-container {
+      max-width: 900px;
+    }
+
+    .form-card,
+    .header-card {
+      border: 0;
+      border-radius: 1rem;
+    }
+
+    .header-card {
+      background: linear-gradient(135deg, #eef5ff 0%, #ffffff 100%);
+    }
+
+    .applicant-option {
+      border: 1px solid #d8e2ef;
+      border-radius: 0.85rem;
+      padding: 1rem;
+      transition: background-color 0.2s ease, border-color 0.2s ease;
+    }
+
+    .applicant-option:hover {
+      background: #f8fafc;
+      border-color: #b7c7dc;
+    }
+  </style>
+</head>
+<body>
+
+<%- include('partials/navbar') %>
+
+<main class="container bursary-container py-5">
+  <section class="card header-card shadow-sm text-center mb-4">
+    <div class="card-body p-4 p-md-5">
+      <h1 class="fw-bold mb-2">Church Sponsorship</h1>
+      <p class="text-muted fs-5 mb-0">Application Form</p>
+    </div>
+  </section>
+
+  <section class="card form-card shadow-sm">
+    <div class="card-body p-4 p-md-5">
+      <form action="/bursaries/church" method="POST">
+        <div class="mb-4">
+          <label class="form-label fw-semibold fs-5">Applicant Type: <span class="text-muted">*</span></label>
+
+          <div class="d-grid gap-3">
+            <div class="applicant-option">
+              <label class="form-check-label d-flex align-items-center gap-3" for="applicantNew">
+                <input class="form-check-input m-0" type="radio" name="applicantType" id="applicantNew" value="new" checked required>
+                <span class="fs-5">New Applicant</span>
+              </label>
+            </div>
+
+            <div class="applicant-option">
+              <label class="form-check-label d-flex align-items-center gap-3" for="applicantContinuing">
+                <input class="form-check-input m-0" type="radio" name="applicantType" id="applicantContinuing" value="continuing" required>
+                <span class="fs-5">Continuing Student</span>
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <div class="mb-4">
+          <label for="fullName" class="form-label fw-semibold fs-5">Full Name: <span class="text-muted">*</span></label>
+          <input type="text" id="fullName" name="fullName" class="form-control form-control-lg" placeholder="Enter your full name" required>
+        </div>
+
+        <div class="mb-4">
+          <label for="contact" class="form-label fw-semibold fs-5">Contact (Email/Phone): <span class="text-muted">*</span></label>
+          <input type="text" id="contact" name="contact" class="form-control form-control-lg" placeholder="Email or phone number" required>
+        </div>
+
+        <div id="continuingFields" class="d-none">
+          <div class="mb-4">
+            <label for="registrationNumber" class="form-label fw-semibold fs-5">Student Registration Number: <span class="text-muted">*</span></label>
+            <input type="text" id="registrationNumber" name="registrationNumber" class="form-control form-control-lg" placeholder="e.g., BU/2026/12345">
+          </div>
+
+          <div class="mb-4">
+            <label for="yearOfStudy" class="form-label fw-semibold fs-5">Year of Study: <span class="text-muted">*</span></label>
+            <select id="yearOfStudy" name="yearOfStudy" class="form-select form-select-lg">
+              <option value="">-- Select Year --</option>
+              <option value="Year 1">Year 1</option>
+              <option value="Year 2">Year 2</option>
+              <option value="Year 3">Year 3</option>
+              <option value="Year 4">Year 4</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="mb-4">
+          <label for="churchName" class="form-label fw-semibold fs-5">Church Name: <span class="text-muted">*</span></label>
+          <input type="text" id="churchName" name="churchName" class="form-control form-control-lg" placeholder="Full name of your SDA church" required>
+        </div>
+
+        <div class="mb-4">
+          <label for="recommendationDetails" class="form-label fw-semibold fs-5">Recommendation Details: <span class="text-muted">*</span></label>
+          <textarea id="recommendationDetails" name="recommendationDetails" rows="5" class="form-control form-control-lg" placeholder="Provide details about your church membership and recommendation..." required></textarea>
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-lg w-100">Submit Bursary Application</button>
+      </form>
+    </div>
+  </section>
+</main>
+
+<%- include('partials/footer') %>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+  const applicantTypeInputs = document.querySelectorAll('input[name="applicantType"]');
+  const continuingFields = document.getElementById("continuingFields");
+  const registrationNumber = document.getElementById("registrationNumber");
+  const yearOfStudy = document.getElementById("yearOfStudy");
+
+  function updateApplicantFields() {
+    const selectedType = document.querySelector('input[name="applicantType"]:checked').value;
+    const isContinuing = selectedType === "continuing";
+
+    continuingFields.classList.toggle("d-none", !isContinuing);
+    registrationNumber.required = isContinuing;
+    yearOfStudy.required = isContinuing;
+  }
+
+  applicantTypeInputs.forEach((input) => {
+    input.addEventListener("change", updateApplicantFields);
+  });
+
+  updateApplicantFields();
+</script>
+</body>
+</html>

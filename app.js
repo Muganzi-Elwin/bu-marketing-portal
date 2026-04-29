@@ -27,8 +27,21 @@ mongoose.connect(process.env.MONGO_URI)
   .catch(err => console.log(err));
 
 // Routes
-app.get("/", (req, res) => {
-  res.render("home");
+app.get("/", async (req, res) => {
+  try {
+    const featuredPrograms = await Program.find().limit(4).lean();
+    res.render("home", {
+      featuredPrograms,
+      success: req.query.success
+    });
+  } catch (error) {
+    console.error("Error loading featured programs:", error);
+    res.render("home", {
+      featuredPrograms: [],
+      success: req.query.success,
+      errorMessage: "Unable to load featured programs at the moment."
+    });
+  }
 });
 
 app.get("/programs", async (req, res) => {
@@ -74,6 +87,7 @@ app.get("/programs", async (req, res) => {
       }
 
       department.programs[level].push({
+        _id: program._id.toString(),
         id: program._id.toString(),
         name: program.name
       });
@@ -96,16 +110,70 @@ app.get("/programs", async (req, res) => {
   }
 });
 
-app.get("/scholarships", (req, res) => {
-  res.render("scholarships");
+app.get("/programs/:id", async (req, res) => {
+  try {
+    const program = await Program.findById(req.params.id).lean();
+
+    if (!program) {
+      return res.status(404).render("programDetails", {
+        program: null,
+        errorMessage: "Program not found."
+      });
+    }
+
+    res.render("programDetails", { program });
+  } catch (error) {
+    console.error("Error loading program details:", error);
+    res.status(500).render("programDetails", {
+      program: null,
+      errorMessage: "Unable to load program details at the moment."
+    });
+  }
 });
 
-app.get("/bursaries", (req, res) => {
-  res.render("bursaries");
+app.get("/quick-apply", async (req, res) => {
+  try {
+    const programs = await Program.find().sort({ name: 1 }).lean();
+    res.render("quickApply", {
+      programs,
+      selectedProgram: req.query.program || ""
+    });
+  } catch (error) {
+    console.error("Error loading quick apply form:", error);
+    res.status(500).render("quickApply", {
+      programs: [],
+      selectedProgram: req.query.program || "",
+      errorMessage: "Unable to load programs at the moment."
+    });
+  }
+});
+
+app.get("/financial-support", (req, res) => {
+  res.render("financialSupport");
+});
+
+app.get("/scholarships/academic", (req, res) => {
+  res.render("academicScholarship");
+});
+
+app.get("/scholarships/sports", (req, res) => {
+  res.render("sportsScholarship");
+});
+
+app.get("/bursaries/needy", (req, res) => {
+  res.render("needyBursary");
+});
+
+app.get("/bursaries/church", (req, res) => {
+  res.render("churchSponsorship");
 });
 
 app.get("/work", (req, res) => {
   res.render("work");
+});
+
+app.get("/work/apply", (req, res) => {
+  res.render("workApplication", { selectedRole: req.query.role || "" });
 });
 
 app.get("/events", (req, res) => {
@@ -121,11 +189,11 @@ app.get("/admission", (req, res) => {
 });
 
 app.get("/feedback", (req, res) => {
-  res.render("feedback");
+  res.render("feedback", { source: req.query.source || "" });
 });
 
 app.get("/success", (req, res) => {
-  res.render("success");
+  res.render("success", { type: req.query.type || "" });
 });
 
 // Server

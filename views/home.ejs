@@ -71,6 +71,13 @@
 <%- include('partials/navbar') %>
 
 <main class="container page-container py-5">
+  <% if (success === "feedback") { %>
+    <div id="successAlert" class="alert alert-success alert-dismissible fade show shadow-sm rounded-3 mb-4" role="alert">
+      Thank you! Your feedback has been submitted successfully.
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+  <% } %>
+
   <section class="hero-section text-center p-4 p-md-5 mb-5 shadow-sm">
     <div class="mx-auto" style="max-width: 760px;">
       <div class="hero-visual mb-4 shadow-sm">
@@ -91,49 +98,18 @@
     <h2 class="section-title fw-bold pb-2 mb-4">Featured Programs</h2>
 
     <div class="row g-4">
-      <div class="col-12 col-md-6">
-        <div class="card program-card p-3 h-100 shadow-sm">
-          <div class="program-visual mb-3">[PROGRAM IMAGE]</div>
-          <div class="card-body p-2">
-            <h3 class="fs-4 fw-bold mb-2">Bachelor of Business Administration</h3>
-            <p class="text-muted small mb-4">School of Business</p>
-            <a href="/programs" class="btn btn-outline-primary w-100">View Details</a>
+      <% (featuredPrograms || []).forEach(program => { %>
+        <div class="col-12 col-md-6">
+          <div class="card program-card p-3 h-100 shadow-sm">
+            <div class="program-visual mb-3">[PROGRAM IMAGE]</div>
+            <div class="card-body p-2">
+              <h3 class="fs-4 fw-bold mb-2"><%= program.name %></h3>
+              <p class="text-muted small mb-4"><%= program.school %></p>
+              <a href="/programs/<%= program._id %>" class="btn btn-outline-primary w-100">View Details</a>
+            </div>
           </div>
         </div>
-      </div>
-
-      <div class="col-12 col-md-6">
-        <div class="card program-card p-3 h-100 shadow-sm">
-          <div class="program-visual mb-3">[PROGRAM IMAGE]</div>
-          <div class="card-body p-2">
-            <h3 class="fs-4 fw-bold mb-2">Bachelor of Science in Computer Science</h3>
-            <p class="text-muted small mb-4">School of Science &amp; Technology</p>
-            <a href="/programs" class="btn btn-outline-primary w-100">View Details</a>
-          </div>
-        </div>
-      </div>
-
-      <div class="col-12 col-md-6">
-        <div class="card program-card p-3 h-100 shadow-sm">
-          <div class="program-visual mb-3">[PROGRAM IMAGE]</div>
-          <div class="card-body p-2">
-            <h3 class="fs-4 fw-bold mb-2">Bachelor of Education</h3>
-            <p class="text-muted small mb-4">School of Education</p>
-            <a href="/programs" class="btn btn-outline-primary w-100">View Details</a>
-          </div>
-        </div>
-      </div>
-
-      <div class="col-12 col-md-6">
-        <div class="card program-card p-3 h-100 shadow-sm">
-          <div class="program-visual mb-3">[PROGRAM IMAGE]</div>
-          <div class="card-body p-2">
-            <h3 class="fs-4 fw-bold mb-2">Bachelor of Nursing</h3>
-            <p class="text-muted small mb-4">School of Health Sciences</p>
-            <a href="/programs" class="btn btn-outline-primary w-100">View Details</a>
-          </div>
-        </div>
-      </div>
+      <% }) %>
     </div>
   </section>
 
@@ -146,5 +122,15 @@
 
 <%- include('partials/footer') %>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+  const successAlert = document.getElementById("successAlert");
+
+  if (successAlert) {
+    setTimeout(() => {
+      const alert = bootstrap.Alert.getOrCreateInstance(successAlert);
+      alert.close();
+    }, 5000);
+  }
+</script>
 </body>
 </html>

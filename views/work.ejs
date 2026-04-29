@@ -1,21 +1,171 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Work Programs</title>
+  <title>Student Work Programs</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <style>
+    body {
+      background: #f7f9fc;
+    }
+
+    .work-container {
+      max-width: 1140px;
+    }
+
+    .header-card,
+    .info-card,
+    .work-card,
+    .process-card {
+      border: 0;
+      border-radius: 1rem;
+    }
+
+    .header-card {
+      background: linear-gradient(135deg, #eef5ff 0%, #ffffff 100%);
+    }
+
+    .work-card {
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .work-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 1rem 2rem rgba(15, 23, 42, 0.1);
+    }
+
+    .meta-badge {
+      background: #edf4ff;
+      color: #0b5ed7;
+      border-radius: 999px;
+      padding: 0.45rem 0.85rem;
+      font-size: 0.9rem;
+      font-weight: 600;
+    }
+  </style>
 </head>
 <body>
 
 <%- include('partials/navbar') %>
 
-<main class="container py-5">
-  <div class="row justify-content-center">
-    <div class="col-lg-8">
-      <h1>Work Programs Page</h1>
-      <p class="lead">Learn about work program opportunities.</p>
+<%
+  const workPrograms = [
+    {
+      id: "1",
+      title: "Library Assistant",
+      department: "University Library",
+      hours: "10-15 hours per week",
+      description: "Assist with shelving books, checking materials in/out, and helping students locate resources.",
+      requirements: ["Good organizational skills", "Basic computer literacy", "Punctual and reliable"],
+      compensation: "UGX 150,000 per month"
+    },
+    {
+      id: "2",
+      title: "Lab Technician Assistant",
+      department: "School of Science & Technology",
+      hours: "8-12 hours per week",
+      description: "Support laboratory setup, equipment maintenance, and student assistance during practicals.",
+      requirements: ["Science background", "Attention to detail", "Safety conscious"],
+      compensation: "UGX 180,000 per month"
+    },
+    {
+      id: "3",
+      title: "Peer Tutor",
+      department: "Academic Support Center",
+      hours: "6-10 hours per week",
+      description: "Provide academic support to fellow students in specific subjects.",
+      requirements: ["Excellent grades in subject area", "Good communication skills", "Patient and helpful"],
+      compensation: "UGX 200,000 per month"
+    },
+    {
+      id: "4",
+      title: "IT Support Assistant",
+      department: "ICT Department",
+      hours: "10-15 hours per week",
+      description: "Assist with basic computer troubleshooting and help desk support.",
+      requirements: ["Computer science or IT student", "Problem-solving skills", "Customer service oriented"],
+      compensation: "UGX 220,000 per month"
+    }
+  ];
+%>
+
+<main class="container work-container py-5">
+  <section class="card header-card shadow-sm text-center mb-4">
+    <div class="card-body p-4 p-md-5">
+      <h1 class="fw-bold mb-2">Student Work Programs</h1>
+      <p class="text-muted fs-5 mb-0">Earn While You Learn - For Continuing Students Only</p>
     </div>
-  </div>
+  </section>
+
+  <section class="card info-card shadow-sm mb-4">
+    <div class="card-body p-4">
+      <h2 class="h4 fw-bold mb-3">About Work Programs</h2>
+      <p class="text-muted mb-3">
+        Our student work programs provide opportunities to gain work experience, develop professional skills, and earn money to support your education.
+      </p>
+      <ul class="text-muted mb-3">
+        <li>Flexible hours that accommodate class schedules</li>
+        <li>Valuable work experience relevant to your studies</li>
+        <li>Competitive compensation</li>
+        <li>Professional references for future employment</li>
+      </ul>
+      <div class="alert alert-primary mb-0">
+        <strong>Note: Only continuing students are eligible to apply for work programs.</strong>
+      </div>
+    </div>
+  </section>
+
+  <section class="d-grid gap-4">
+    <% workPrograms.forEach((program) => { %>
+      <article class="card work-card shadow-sm">
+        <div class="card-body p-4">
+          <div class="d-flex flex-column flex-lg-row justify-content-between gap-3 mb-4">
+            <div>
+              <h3 class="fw-bold mb-3"><%= program.title %></h3>
+              <div class="d-flex flex-wrap gap-2">
+                <span class="meta-badge"><%= program.department %></span>
+                <span class="meta-badge"><%= program.hours %></span>
+              </div>
+            </div>
+            <div class="align-self-start">
+              <span class="badge text-bg-success fs-6 px-3 py-2"><%= program.compensation %></span>
+            </div>
+          </div>
+
+          <div class="border-top pt-3 mb-3">
+            <h4 class="h6 fw-bold text-uppercase text-muted mb-2">Description:</h4>
+            <p class="mb-0"><%= program.description %></p>
+          </div>
+
+          <div class="border-top pt-3 mb-4">
+            <h4 class="h6 fw-bold text-uppercase text-muted mb-2">Requirements:</h4>
+            <ul class="mb-0">
+              <% program.requirements.forEach((requirement) => { %>
+                <li><%= requirement %></li>
+              <% }) %>
+            </ul>
+          </div>
+
+          <a href="/work/apply?role=<%= encodeURIComponent(program.title) %>" class="btn btn-primary w-100">
+            Apply for This Position
+          </a>
+        </div>
+      </article>
+    <% }) %>
+  </section>
+
+  <section class="card process-card shadow-sm mt-5">
+    <div class="card-body p-4">
+      <h3 class="fw-bold mb-3">Application Process</h3>
+      <ul class="text-muted mb-0">
+        <li>Applications are reviewed on a rolling basis</li>
+        <li>Must be a currently enrolled continuing student in good academic standing</li>
+        <li>Positions are awarded based on qualifications and availability</li>
+        <li>For questions, contact: workprograms@bugema.ac.ug</li>
+      </ul>
+    </div>
+  </section>
 </main>
 
 <%- include('partials/footer') %>

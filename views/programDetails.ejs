@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title><%= program ? program.name : "Program Details" %></title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <style>
+    body {
+      background: #f7f9fc;
+    }
+
+    .details-container {
+      max-width: 980px;
+    }
+
+    .details-card {
+      border: 0;
+      border-radius: 1rem;
+    }
+
+    .program-header {
+      background: linear-gradient(135deg, #eef5ff 0%, #ffffff 100%);
+    }
+
+    .breadcrumb a {
+      text-decoration: none;
+    }
+  </style>
+</head>
+<body>
+
+<%- include('partials/navbar') %>
+
+<main class="container details-container py-5">
+  <% if (typeof errorMessage !== "undefined") { %>
+    <div class="alert alert-danger shadow-sm rounded-3"><%= errorMessage %></div>
+    <a href="/programs" class="btn btn-outline-primary">Back to Programs</a>
+  <% } else { %>
+    <nav aria-label="breadcrumb" class="mb-4">
+      <ol class="breadcrumb small mb-0">
+        <li class="breadcrumb-item"><a href="/">Home</a></li>
+        <li class="breadcrumb-item"><a href="/programs">Programs</a></li>
+        <li class="breadcrumb-item active text-muted" aria-current="page"><%= program.name %></li>
+      </ol>
+    </nav>
+
+    <section class="card details-card program-header shadow-sm mb-4">
+      <div class="card-body p-4 p-md-5">
+        <span class="badge text-bg-primary mb-3"><%= program.level %></span>
+        <h1 class="display-5 fw-bold mb-4"><%= program.name %></h1>
+
+        <div class="row g-4">
+          <div class="col-12 col-md-6">
+            <p class="text-muted mb-1">School</p>
+            <p class="fw-semibold fs-5 mb-0"><%= program.school %></p>
+          </div>
+          <div class="col-12 col-md-6">
+            <p class="text-muted mb-1">Department</p>
+            <p class="fw-semibold fs-5 mb-0"><%= program.department %></p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="card details-card shadow-sm mb-4">
+      <div class="card-body p-4">
+        <h2 class="h4 fw-bold mb-3">Description</h2>
+        <p class="text-muted mb-0">
+          This program is designed to equip students with strong academic knowledge, practical skills, and professional values for success in their chosen field.
+        </p>
+      </div>
+    </section>
+
+    <section class="card details-card shadow-sm mb-4">
+      <div class="card-body p-4">
+        <h2 class="h4 fw-bold mb-3">Duration</h2>
+        <p class="text-muted mb-0">
+          The program duration varies by academic level and study plan. Full details will be provided during the application process.
+        </p>
+      </div>
+    </section>
+
+    <section class="card details-card shadow-sm mb-4">
+      <div class="card-body p-4">
+        <h2 class="h4 fw-bold mb-3">Entry Requirements</h2>
+        <ul class="text-muted mb-0">
+          <li>Completed previous academic qualification relevant to this program.</li>
+          <li>Official academic transcripts or certificates.</li>
+          <li>Valid identification documents.</li>
+          <li>Any additional department-specific requirements.</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="card details-card shadow-sm mb-4">
+      <div class="card-body p-4">
+        <h2 class="h4 fw-bold mb-3">Career Prospects</h2>
+        <ul class="text-muted mb-0">
+          <li>Professional roles in the related industry.</li>
+          <li>Graduate study and research opportunities.</li>
+          <li>Entrepreneurship and leadership pathways.</li>
+          <li>Public, private, and non-profit sector opportunities.</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="mb-4">
+      <h2 class="h3 fw-bold mb-4">Choose Application Type</h2>
+
+      <div class="row g-4">
+        <div class="col-12 col-md-6">
+          <div class="card details-card shadow-sm h-100">
+            <div class="card-body p-4 d-flex flex-column">
+              <h3 class="h4 fw-bold mb-3">Quick Apply</h3>
+              <p class="text-muted flex-grow-1">
+                Start with a shorter application and submit your basic interest in this program.
+              </p>
+              <a href="/quick-apply?program=<%= encodeURIComponent(program.name) %>" class="btn btn-secondary">Quick Apply</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-12 col-md-6">
+          <div class="card details-card shadow-sm h-100">
+            <div class="card-body p-4 d-flex flex-column">
+              <h3 class="h4 fw-bold mb-3">Full Admission</h3>
+              <p class="text-muted flex-grow-1">
+                Complete the full admission form and submit all required application details.
+              </p>
+              <a href="/admission" class="btn btn-primary">Full Admission</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  <% } %>
+</main>
+
+<%- include('partials/footer') %>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

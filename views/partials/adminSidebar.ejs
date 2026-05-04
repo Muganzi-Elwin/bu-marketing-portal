@@ -1,0 +1,29 @@
+<%
+  const currentAdminPage = typeof activeAdminPage !== "undefined" ? activeAdminPage : "dashboard";
+%>
+
+<aside class="admin-sidebar">
+  <div class="admin-sidebar-header">
+    <h2 class="h4 fw-bold mb-1">Admin Panel</h2>
+    <p class="small text-white-50 mb-0">Bugema Marketing Portal</p>
+  </div>
+
+  <nav class="admin-nav" aria-label="Admin navigation">
+    <a href="/admin" class="admin-nav-link <%= currentAdminPage === 'dashboard' ? 'active' : '' %>">
+      Dashboard
+    </a>
+    <a href="/admin/applications" class="admin-nav-link <%= currentAdminPage === 'applications' ? 'active' : '' %>">
+      Applications
+    </a>
+    <a href="/admin/feedback" class="admin-nav-link <%= currentAdminPage === 'feedback' ? 'active' : '' %>">
+      Feedback Data
+    </a>
+    <a href="/admin/analytics" class="admin-nav-link <%= currentAdminPage === 'analytics' ? 'active' : '' %>">
+      Marketing Analytics
+    </a>
+  </nav>
+
+  <div class="admin-sidebar-footer">
+    <a href="/" class="admin-nav-link admin-back-link">Back to Site</a>
+  </div>
+</aside>

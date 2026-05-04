@@ -85,7 +85,8 @@
         <div id="continuingFields" class="d-none">
           <div class="mb-4">
             <label for="registrationNumber" class="form-label fw-semibold fs-5">Student Registration Number: <span class="text-muted">*</span></label>
-            <input type="text" id="registrationNumber" name="registrationNumber" class="form-control form-control-lg" placeholder="e.g., BU/2026/12345">
+            <input type="text" id="registrationNumber" name="registrationNumber" class="form-control form-control-lg" placeholder="24/BSE/BU/R/0005" pattern="^\d{2}/[A-Z]{2,5}/BU/R/\d{4}$" title="Format: 24/BSE/BU/R/0005">
+            <div class="form-text">Format: 24/BSE/BU/R/0005</div>
           </div>
 
           <div class="mb-4">
@@ -107,7 +108,7 @@
 
         <div class="mb-4">
           <label for="documents" class="form-label fw-semibold fs-5">Upload Academic Records: <span class="text-muted">*</span></label>
-          <input type="file" id="documents" name="documents" class="form-control form-control-lg" required>
+          <input type="file" id="documents" name="documents" class="form-control form-control-lg" multiple required>
           <div class="form-text">Required: Academic transcripts, certificates</div>
         </div>
 
@@ -132,6 +133,8 @@
     continuingFields.classList.toggle("d-none", !isContinuing);
     registrationNumber.required = isContinuing;
     yearOfStudy.required = isContinuing;
+    registrationNumber.disabled = !isContinuing;
+    yearOfStudy.disabled = !isContinuing;
   }
 
   applicantTypeInputs.forEach((input) => {

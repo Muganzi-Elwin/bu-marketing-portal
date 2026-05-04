@@ -19,24 +19,35 @@
       border-radius: 1.25rem;
     }
 
-    .hero-visual {
-      min-height: 12rem;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: linear-gradient(135deg, #dbeafe 0%, #f8fafc 100%);
-      color: #64748b;
-      border: 1px solid #d8e2ef;
+    .hero-img {
+      width: 100%;
+      max-height: 420px;
+      object-fit: cover;
       border-radius: 1rem;
+      box-shadow: 0 0.75rem 1.5rem rgba(15, 23, 42, 0.12);
+      transition: transform 0.3s ease;
+      cursor: pointer;
+    }
+
+    .hero-img:hover {
+      transform: scale(1.04);
     }
 
     .program-visual {
-      min-height: 8rem;
+      height: 220px;
       display: flex;
       align-items: center;
       justify-content: center;
       background: #edf4ff;
       color: #64748b;
+      border-radius: 0.85rem;
+      overflow: hidden;
+    }
+
+    .program-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
       border-radius: 0.85rem;
     }
 
@@ -49,6 +60,28 @@
     .program-card:hover {
       transform: translateY(-4px);
       box-shadow: 0 1rem 2rem rgba(15, 23, 42, 0.12);
+    }
+
+    .featured-card {
+      transition: transform 0.25s ease, box-shadow 0.25s ease;
+    }
+
+    .featured-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 0.75rem 1.5rem rgba(0, 0, 0, 0.12);
+    }
+
+    .featured-img-wrapper {
+      overflow: hidden;
+      border-radius: 0.75rem;
+    }
+
+    .featured-img {
+      transition: transform 0.35s ease;
+    }
+
+    .featured-card:hover .featured-img {
+      transform: scale(1.05);
     }
 
     .section-title {
@@ -80,9 +113,7 @@
 
   <section class="hero-section text-center p-4 p-md-5 mb-5 shadow-sm">
     <div class="mx-auto" style="max-width: 760px;">
-      <div class="hero-visual mb-4 shadow-sm">
-        [HERO IMAGE]
-      </div>
+      <img src="/images/Hero-Image.jpeg" alt="Bugema University students" class="hero-img img-fluid mb-4" data-bs-toggle="modal" data-bs-target="#heroImagePreviewModal" data-img="/images/Hero-Image.jpeg" data-title="Apply to Bugema University">
 
       <h1 class="display-4 fw-bold mb-3">Apply to Bugema University</h1>
       <p class="fs-5 text-muted mb-4">Start your journey to excellence.</p>
@@ -99,13 +130,20 @@
 
     <div class="row g-4">
       <% (featuredPrograms || []).forEach(program => { %>
+        <% const programImage = featuredProgramImages && featuredProgramImages[program.name]; %>
         <div class="col-12 col-md-6">
-          <div class="card program-card p-3 h-100 shadow-sm">
-            <div class="program-visual mb-3">[PROGRAM IMAGE]</div>
-            <div class="card-body p-2">
+          <div class="card program-card featured-card p-3 h-100 shadow-sm d-flex flex-column">
+            <div class="program-visual featured-img-wrapper mb-3">
+              <% if (programImage) { %>
+                <img src="<%= programImage %>" alt="<%= program.name %>" class="program-img featured-img img-fluid">
+              <% } else { %>
+                <span>Program Image</span>
+              <% } %>
+            </div>
+            <div class="card-body p-2 d-flex flex-column flex-grow-1">
               <h3 class="fs-4 fw-bold mb-2"><%= program.name %></h3>
               <p class="text-muted small mb-4"><%= program.school %></p>
-              <a href="/programs/<%= program._id %>" class="btn btn-outline-primary w-100">View Details</a>
+              <a href="/programs/<%= program._id %>" class="btn btn-outline-primary w-100 mt-auto">View Details</a>
             </div>
           </div>
         </div>
@@ -120,6 +158,21 @@
   </section>
 </main>
 
+<div class="modal fade" id="heroImagePreviewModal" tabindex="-1" aria-labelledby="heroImagePreviewModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content border-0 rounded-4 overflow-hidden">
+      <div class="modal-header">
+        <h5 class="modal-title fw-bold" id="heroImagePreviewModalLabel">Image Preview</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body text-center bg-light">
+        <img id="heroImagePreviewModalImg" src="" alt="" class="img-fluid rounded shadow-sm">
+        <p id="heroImagePreviewModalCaption" class="text-muted mt-3 mb-0"></p>
+      </div>
+    </div>
+  </div>
+</div>
+
 <%- include('partials/footer') %>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script>
@@ -130,6 +183,24 @@
       const alert = bootstrap.Alert.getOrCreateInstance(successAlert);
       alert.close();
     }, 5000);
+  }
+
+  const heroImagePreviewModal = document.getElementById("heroImagePreviewModal");
+
+  if (heroImagePreviewModal) {
+    heroImagePreviewModal.addEventListener("show.bs.modal", (event) => {
+      const trigger = event.relatedTarget;
+      const imageSrc = trigger.getAttribute("data-img");
+      const imageTitle = trigger.getAttribute("data-title");
+      const modalTitle = document.getElementById("heroImagePreviewModalLabel");
+      const modalImage = document.getElementById("heroImagePreviewModalImg");
+      const modalCaption = document.getElementById("heroImagePreviewModalCaption");
+
+      modalTitle.textContent = imageTitle || "Image Preview";
+      modalImage.src = imageSrc || "";
+      modalImage.alt = imageTitle || "Hero image";
+      modalCaption.textContent = imageTitle || "";
+    });
   }
 </script>
 </body>

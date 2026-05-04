@@ -9,7 +9,8 @@ const admissionSchema = new mongoose.Schema({
   previousSchool: { type: String, required: true },
   selectedProgram: { type: String, required: true },
   intake: { type: String, required: true },
-  documentPath: { type: String, required: true },
+  documentPath: { type: String },
+  documentPaths: [String],
   createdAt: { type: Date, default: Date.now }
 });
 

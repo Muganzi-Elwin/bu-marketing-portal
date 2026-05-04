@@ -3,7 +3,10 @@ import mongoose from "mongoose";
 import dotenv from "dotenv";
 import ejs from "ejs";
 import formRoutes from "./routes/formRoutes.js";
+import adminRoutes from "./routes/adminRoutes.js";
 import Program from "./models/programModel.js";
+import Event from "./models/eventModel.js";
+import News from "./models/newsModel.js";
 
 dotenv.config();
 
@@ -15,6 +18,7 @@ app.use(express.json());
 app.use(express.static("public"));
 app.use("/uploads", express.static("uploads"));
 app.use("/", formRoutes);
+app.use("/", adminRoutes);
 
 // View engine (explicit fix for EJS in ES modules)
 app.engine("ejs", ejs.renderFile);
@@ -29,15 +33,42 @@ mongoose.connect(process.env.MONGO_URI)
 // Routes
 app.get("/", async (req, res) => {
   try {
-    const featuredPrograms = await Program.find().limit(4).lean();
+    const featuredProgramNames = [
+      "Bachelor of Science in Software Engineering",
+      "Bachelor of Business Administration",
+      "Bachelor of Nursing Sciences",
+      "Bachelor of Theology",
+      "Bachelor of Science in Agriculture (Crop and Animal)",
+      "Bachelor of Social Work"
+    ];
+
+    const featuredProgramImages = {
+      "Bachelor of Science in Software Engineering": "/images/software-engineering.png",
+      "Bachelor of Business Administration": "/images/business-administration.png",
+      "Bachelor of Nursing Sciences": "/images/nursing-sciences.png",
+      "Bachelor of Theology": "/images/theology.png",
+      "Bachelor of Science in Agriculture (Crop and Animal)": "/images/agriculture.png",
+      "Bachelor of Social Work": "/images/social-work.png"
+    };
+
+    const programs = await Program.find({
+      name: { $in: featuredProgramNames }
+    }).lean();
+
+    const featuredPrograms = featuredProgramNames
+      .map((name) => programs.find((program) => program.name === name))
+      .filter(Boolean);
+
     res.render("home", {
       featuredPrograms,
+      featuredProgramImages,
       success: req.query.success
     });
   } catch (error) {
     console.error("Error loading featured programs:", error);
     res.render("home", {
       featuredPrograms: [],
+      featuredProgramImages: {},
       success: req.query.success,
       errorMessage: "Unable to load featured programs at the moment."
     });
@@ -176,16 +207,41 @@ app.get("/work/apply", (req, res) => {
   res.render("workApplication", { selectedRole: req.query.role || "" });
 });
 
-app.get("/events", (req, res) => {
-  res.render("events");
+app.get("/events", async (req, res) => {
+  try {
+    const events = await Event.find().sort({ createdAt: -1 }).lean();
+    const news = await News.find().sort({ createdAt: -1 }).lean();
+
+    res.render("events", { events, news });
+  } catch (error) {
+    console.error("Error loading events and news:", error);
+    res.status(500).render("events", {
+      events: [],
+      news: [],
+      errorMessage: "Unable to load events and news at the moment."
+    });
+  }
 });
 
 app.get("/contact", (req, res) => {
   res.render("contact");
 });
 
-app.get("/admission", (req, res) => {
-  res.render("admission");
+app.get("/admission", async (req, res) => {
+  try {
+    const programs = await Program.find().sort({ name: 1 }).lean();
+    res.render("admission", {
+      programs,
+      selectedProgram: req.query.program || ""
+    });
+  } catch (error) {
+    console.error("Error loading admission form:", error);
+    res.status(500).render("admission", {
+      programs: [],
+      selectedProgram: req.query.program || "",
+      errorMessage: "Unable to load programs at the moment."
+    });
+  }
 });
 
 app.get("/feedback", (req, res) => {

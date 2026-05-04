@@ -11,6 +11,7 @@ const bursaryApplicationSchema = new mongoose.Schema({
   backgroundInfo: { type: String },
   churchName: { type: String },
   recommendationDetails: { type: String },
+  documentPaths: [String],
   status: { type: String, default: "Pending" },
   createdAt: { type: Date, default: Date.now }
 });

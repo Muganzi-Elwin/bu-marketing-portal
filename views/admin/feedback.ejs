@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Admin Feedback</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <style>
+    body { background: #eef2f6; color: #263238; font-family: Arial, Helvetica, sans-serif; }
+    .admin-layout { min-height: 100vh; display: flex; }
+    .admin-sidebar { width: 280px; min-height: 100vh; background: linear-gradient(180deg, #003366 0%, #00264d 100%); color: #fff; padding: 1.5rem; display: flex; flex-direction: column; box-shadow: 0.5rem 0 1.5rem rgba(15, 23, 42, 0.08); }
+    .admin-sidebar-header { border-bottom: 1px solid rgba(255, 255, 255, 0.16); padding-bottom: 1rem; margin-bottom: 1.25rem; }
+    .admin-nav { display: grid; gap: 0.45rem; }
+    .admin-nav-link { color: #fff; text-decoration: none; display: block; padding: 0.8rem 0.95rem; border-radius: 0.75rem; font-weight: 600; transition: background-color 0.2s ease, color 0.2s ease, transform 0.2s ease; }
+    .admin-nav-link:hover { background: rgba(255, 255, 255, 0.12); color: #ffcc00; transform: translateX(2px); }
+    .admin-nav-link.active { background: #ffcc00; color: #003366; }
+    .admin-sidebar-footer { margin-top: auto; padding-top: 1.25rem; border-top: 1px solid rgba(255, 255, 255, 0.16); }
+    .admin-back-link { background: rgba(255, 255, 255, 0.1); }
+    .admin-main { flex: 1; padding: 2rem; }
+    .data-card { border: 0; border-radius: 1rem; box-shadow: 0 0.5rem 1.25rem rgba(15, 23, 42, 0.08); overflow: hidden; }
+    .table { margin-bottom: 0; }
+    .table thead th { background: #f8fafc; color: #334155; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.02em; }
+    .rating-badge { background: #fff7df; color: #946200; border-radius: 999px; padding: 0.35rem 0.7rem; font-weight: 700; }
+    @media (max-width: 991.98px) { .admin-layout { flex-direction: column; } .admin-sidebar { width: 100%; min-height: auto; } .admin-main { padding: 1.25rem; } }
+  </style>
+</head>
+<body>
+  <%
+    const formatDate = (date) => date ? new Date(date).toLocaleDateString("en-UG", {
+      year: "numeric",
+      month: "short",
+      day: "numeric"
+    }) : "N/A";
+  %>
+
+  <div class="admin-layout">
+    <%- include('../partials/adminSidebar', { activeAdminPage: 'feedback' }) %>
+
+    <main class="admin-main">
+      <div class="d-flex flex-column flex-lg-row align-items-lg-center justify-content-between gap-3 mb-4">
+        <div>
+          <h1 class="fw-bold mb-1">Feedback Data</h1>
+          <p class="text-muted mb-0">Review feedback sources, ratings, and comments submitted through the portal.</p>
+        </div>
+      </div>
+
+      <% if (typeof errorMessage !== "undefined") { %>
+        <div class="alert alert-danger shadow-sm rounded-3 mb-4"><%= errorMessage %></div>
+      <% } %>
+
+      <section class="card data-card">
+        <div class="table-responsive">
+          <table class="table table-hover align-middle">
+            <thead>
+              <tr>
+                <th>Source</th>
+                <th>Rating</th>
+                <th>Comment</th>
+                <th>Date Submitted</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% if ((feedbackRecords || []).length === 0) { %>
+                <tr>
+                  <td colspan="4" class="text-muted text-center py-4">No feedback responses yet.</td>
+                </tr>
+              <% } %>
+
+              <% (feedbackRecords || []).forEach((feedback) => { %>
+                <tr>
+                  <td class="fw-semibold"><%= feedback.source || "N/A" %></td>
+                  <td><span class="rating-badge"><%= feedback.rating || 0 %>/5</span></td>
+                  <td><%= feedback.comment || "No comment provided" %></td>
+                  <td><%= formatDate(feedback.createdAt) %></td>
+                </tr>
+              <% }) %>
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

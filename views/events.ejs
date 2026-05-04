@@ -1,24 +1,215 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Events</title>
+  <title>Events &amp; News</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <style>
+    body {
+      background: #f7f9fc;
+    }
+
+    .events-container {
+      max-width: 1140px;
+    }
+
+    .header-card,
+    .event-card,
+    .news-card {
+      border: 0;
+      border-radius: 1rem;
+    }
+
+    .header-card {
+      background: linear-gradient(135deg, #eef5ff 0%, #ffffff 100%);
+    }
+
+    .section-title {
+      color: #102a43;
+    }
+
+    .event-image,
+    .news-image {
+      background: #f1f5f9;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 0.85rem;
+      overflow: hidden;
+    }
+
+    .event-image img,
+    .news-image img {
+      width: 100%;
+      height: auto;
+      object-fit: contain;
+      transition: transform 0.3s ease;
+      cursor: pointer;
+    }
+
+    .event-image:hover img,
+    .news-image:hover img {
+      transform: scale(1.04);
+    }
+
+    .event-meta {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: #475569;
+    }
+
+    .event-meta-label {
+      background: #edf4ff;
+      color: #0b5ed7;
+      border-radius: 999px;
+      padding: 0.25rem 0.65rem;
+      font-size: 0.75rem;
+      font-weight: 700;
+    }
+  </style>
 </head>
 <body>
 
 <%- include('partials/navbar') %>
 
-<main class="container py-5">
-  <div class="row justify-content-center">
-    <div class="col-lg-8">
-      <h1>Events Page</h1>
-      <p class="lead">Stay updated on upcoming events.</p>
+<main class="container events-container py-5">
+  <section class="card header-card shadow-sm text-center mb-5">
+    <div class="card-body p-4 p-md-5">
+      <h1 class="fw-bold mb-2">Events &amp; News</h1>
+      <p class="text-muted fs-5 mb-0">Stay Updated with Bugema University</p>
+    </div>
+  </section>
+
+  <% if (typeof errorMessage !== "undefined") { %>
+    <div class="alert alert-danger shadow-sm rounded-3"><%= errorMessage %></div>
+  <% } %>
+
+  <section class="mb-5">
+    <h2 class="section-title fw-bold mb-4">Upcoming Events</h2>
+
+    <div class="d-grid gap-4">
+      <% if ((events || []).length === 0) { %>
+        <div class="alert alert-light border shadow-sm mb-0">No upcoming events available.</div>
+      <% } %>
+
+      <% (events || []).forEach((event) => { %>
+        <article class="card event-card shadow-sm">
+          <div class="card-body p-4">
+            <div class="row g-4 align-items-start mb-4">
+              <div class="col-12 col-lg">
+                <h3 class="fw-bold mb-3"><%= event.title %></h3>
+
+                <div class="d-grid gap-2">
+                  <div class="event-meta">
+                    <span class="event-meta-label">DATE</span>
+                    <span><%= event.date %></span>
+                  </div>
+                  <div class="event-meta">
+                    <span class="event-meta-label">TIME</span>
+                    <span><%= event.time || "To be communicated" %></span>
+                  </div>
+                  <div class="event-meta">
+                    <span class="event-meta-label">LOCATION</span>
+                    <span><%= event.location || "To be communicated" %></span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-12 col-lg-4">
+                <div class="event-image">
+                  <% if (event.image) { %>
+                    <img src="/images/<%= event.image %>" class="img-fluid rounded" alt="<%= event.title %>" data-bs-toggle="modal" data-bs-target="#imagePreviewModal" data-img="/images/<%= event.image %>" data-title="<%= event.title %>">
+                  <% } %>
+                </div>
+              </div>
+            </div>
+
+            <div class="border-top pt-3">
+              <p class="text-muted mb-0"><%= event.description %></p>
+            </div>
+
+            <div class="mt-4">
+              <button type="button" class="btn btn-primary">Register for Event</button>
+            </div>
+          </div>
+        </article>
+      <% }) %>
+    </div>
+  </section>
+
+  <section>
+    <h2 class="section-title fw-bold mb-4">Latest News</h2>
+
+    <div class="row g-4">
+      <% if ((news || []).length === 0) { %>
+        <div class="col-12">
+          <div class="alert alert-light border shadow-sm mb-0">No news available.</div>
+        </div>
+      <% } %>
+
+      <% (news || []).forEach((item) => { %>
+        <div class="col-12 col-md-6">
+          <article class="card news-card shadow-sm h-100">
+            <div class="card-body p-4 d-flex flex-column">
+              <div class="news-image mb-3">
+                <% if (item.image) { %>
+                  <img src="/images/<%= item.image %>" class="img-fluid rounded mb-3" alt="<%= item.title %>" data-bs-toggle="modal" data-bs-target="#imagePreviewModal" data-img="/images/<%= item.image %>" data-title="<%= item.title %>">
+                <% } %>
+              </div>
+              <p class="text-muted small mb-2"><%= item.date %></p>
+              <h3 class="h4 fw-bold mb-3"><%= item.title %></h3>
+              <p class="text-muted flex-grow-1"><%= item.summary %></p>
+
+              <% if (item.link) { %>
+                <a href="<%= item.link %>" class="btn btn-outline-primary align-self-start" target="_blank" rel="noopener">Read More</a>
+              <% } else { %>
+                <button type="button" class="btn btn-outline-primary align-self-start">Read More</button>
+              <% } %>
+            </div>
+          </article>
+        </div>
+      <% }) %>
+    </div>
+  </section>
+</main>
+
+<div class="modal fade" id="imagePreviewModal" tabindex="-1" aria-labelledby="imagePreviewModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content border-0 rounded-4 overflow-hidden">
+      <div class="modal-header">
+        <h5 class="modal-title fw-bold" id="imagePreviewModalLabel">Image Preview</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body text-center bg-light">
+        <img id="imagePreviewModalImg" src="" alt="" class="img-fluid rounded shadow-sm">
+        <p id="imagePreviewModalCaption" class="text-muted mt-3 mb-0"></p>
+      </div>
     </div>
   </div>
-</main>
+</div>
 
 <%- include('partials/footer') %>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+  const imagePreviewModal = document.getElementById("imagePreviewModal");
+
+  if (imagePreviewModal) {
+    imagePreviewModal.addEventListener("show.bs.modal", (event) => {
+      const trigger = event.relatedTarget;
+      const imageSrc = trigger.getAttribute("data-img");
+      const imageTitle = trigger.getAttribute("data-title");
+      const modalTitle = document.getElementById("imagePreviewModalLabel");
+      const modalImage = document.getElementById("imagePreviewModalImg");
+      const modalCaption = document.getElementById("imagePreviewModalCaption");
+
+      modalTitle.textContent = imageTitle || "Image Preview";
+      modalImage.src = imageSrc || "";
+      modalImage.alt = imageTitle || "Event or news image";
+      modalCaption.textContent = imageTitle || "";
+    });
+  }
+</script>
 </body>
 </html>

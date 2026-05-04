@@ -11,6 +11,7 @@ const scholarshipApplicationSchema = new mongoose.Schema({
   sportType: { type: String },
   achievements: { type: String },
   documentPath: { type: String },
+  documentPaths: [String],
   status: { type: String, default: "Pending" },
   createdAt: { type: Date, default: Date.now }
 });

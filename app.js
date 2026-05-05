@@ -43,12 +43,12 @@ app.get("/", async (req, res) => {
     ];
 
     const featuredProgramImages = {
-      "Bachelor of Science in Software Engineering": "/images/software-engineering.png",
-      "Bachelor of Business Administration": "/images/business-administration.png",
-      "Bachelor of Nursing Sciences": "/images/nursing-sciences.png",
-      "Bachelor of Theology": "/images/theology.png",
-      "Bachelor of Science in Agriculture (Crop and Animal)": "/images/agriculture.png",
-      "Bachelor of Social Work": "/images/social-work.png"
+      "Bachelor of Science in Software Engineering": "/images/software-engineering.jpg",
+      "Bachelor of Business Administration": "/images/business-administration.jpg",
+      "Bachelor of Nursing Sciences": "/images/nursing-sciences.jpg",
+      "Bachelor of Theology": "/images/theology.jpg",
+      "Bachelor of Science in Agriculture (Crop and Animal)": "/images/agriculture.jpg",
+      "Bachelor of Social Work": "/images/social-work.jpg"
     };
 
     const programs = await Program.find({

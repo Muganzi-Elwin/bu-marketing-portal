@@ -42,10 +42,21 @@
   <div class="card shadow p-4 form-container">
 
     <% const admissionPrograms = typeof programs !== "undefined" ? programs : []; %>
-    <% const currentProgram = typeof selectedProgram !== "undefined" ? selectedProgram : ""; %>
+    <% const admissionOldInput = typeof oldInput !== "undefined" ? oldInput : {}; %>
+    <% const currentProgram = admissionOldInput.selectedProgram || (typeof selectedProgram !== "undefined" ? selectedProgram : ""); %>
 
     <% if (typeof errorMessage !== "undefined") { %>
       <div class="alert alert-danger"><%= errorMessage %></div>
+    <% } %>
+
+    <% if (typeof errors !== "undefined" && errors.length > 0) { %>
+      <div class="alert alert-danger">
+        <ul class="mb-0">
+          <% errors.forEach((error) => { %>
+            <li><%= error %></li>
+          <% }) %>
+        </ul>
+      </div>
     <% } %>
 
     <h2 class="text-center mb-4">Full Admission Form</h2>
@@ -57,30 +68,32 @@
 
       <div class="mb-3">
         <label class="required">Full Name</label>
-        <input type="text" name="fullName" class="form-control" placeholder="Enter your full name" required>
+        <input type="text" name="fullName" class="form-control" placeholder="Enter your full name" value="<%= admissionOldInput.fullName || '' %>" maxlength="80" required>
+        <div class="form-text">Use your full legal name, 2 to 80 characters.</div>
       </div>
 
       <div class="mb-3">
         <label class="required">Date of Birth</label>
-        <input type="date" name="dob" class="form-control" required>
+        <input type="date" name="dob" class="form-control" value="<%= admissionOldInput.dob || '' %>" required>
       </div>
 
       <div class="mb-3">
         <label class="required">Email Address</label>
-        <input type="email" name="email" class="form-control" placeholder="example@gmail.com" required>
+        <input type="email" name="email" class="form-control" placeholder="example@gmail.com" value="<%= admissionOldInput.email || '' %>" maxlength="120" required>
       </div>
 
       <div class="mb-3">
         <label class="required">Phone Number</label>
         <div class="input-group">
           <select class="form-select" id="countryCode"></select>
-          <input type="text" name="phone" class="form-control" placeholder="e.g. 701234567" required>
+          <input type="text" name="phone" class="form-control" placeholder="e.g. +256 701 234 567" value="<%= admissionOldInput.phone || '' %>" maxlength="120" required>
         </div>
+        <div class="form-text">Use digits, spaces, +, or hyphens.</div>
       </div>
 
       <div class="mb-3">
         <label class="required">Residential Address</label>
-        <textarea name="address" class="form-control" rows="2" placeholder="e.g. Kampala, Uganda" required></textarea>
+        <textarea name="address" class="form-control" rows="2" placeholder="e.g. Kampala, Uganda" maxlength="180" required><%= admissionOldInput.address || '' %></textarea>
       </div>
 
       <!-- ACADEMIC -->
@@ -88,12 +101,13 @@
 
       <div class="mb-3">
         <label class="required">Previous School</label>
-        <input type="text" name="previousSchool" class="form-control" placeholder="Name of your previous school" required>
+        <input type="text" name="previousSchool" class="form-control" placeholder="Name of your previous school" value="<%= admissionOldInput.previousSchool || '' %>" maxlength="120" required>
       </div>
 
       <div class="mb-3">
         <label class="required">Academic History</label>
-        <textarea name="academicHistory" class="form-control" rows="3" placeholder="Briefly describe your academic background" required></textarea>
+        <textarea name="academicHistory" class="form-control" rows="3" placeholder="Briefly describe your academic background" maxlength="1000" required><%= admissionOldInput.academicHistory || '' %></textarea>
+        <div class="form-text">Maximum 1000 characters.</div>
       </div>
 
       <!-- DOCUMENT UPLOAD -->
@@ -127,9 +141,9 @@
         <label class="required">Preferred Intake</label>
         <select name="intake" class="form-select" required>
           <option value="">-- Select Intake --</option>
-          <option>January</option>
-          <option>May</option>
-          <option>August</option>
+          <option <%= admissionOldInput.intake === "January" ? "selected" : "" %>>January</option>
+          <option <%= admissionOldInput.intake === "May" ? "selected" : "" %>>May</option>
+          <option <%= admissionOldInput.intake === "August" ? "selected" : "" %>>August</option>
         </select>
       </div>
 

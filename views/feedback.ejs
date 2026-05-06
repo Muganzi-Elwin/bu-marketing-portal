@@ -40,6 +40,8 @@
 <%- include('partials/navbar') %>
 
 <main class="container feedback-container py-5">
+  <% const feedbackOldInput = typeof oldInput !== "undefined" ? oldInput : {}; %>
+
   <div class="text-center mb-4">
     <h1 class="fw-bold mb-2">Feedback Form</h1>
     <p class="text-muted fs-5 mb-0">Help Us Improve Our Services</p>
@@ -64,6 +66,16 @@
     
   </div>
 
+  <% if (typeof errors !== "undefined" && errors.length > 0) { %>
+    <div class="alert alert-danger shadow-sm rounded-3">
+      <ul class="mb-0">
+        <% errors.forEach((error) => { %>
+          <li><%= error %></li>
+        <% }) %>
+      </ul>
+    </div>
+  <% } %>
+
   <div class="card feedback-card shadow-sm">
     <div class="card-body p-4 p-md-5">
       <form action="/feedback" method="POST">
@@ -73,43 +85,43 @@
           <div class="row g-3">
             <div class="col-12 col-sm-6">
               <div class="form-check">
-                <input class="form-check-input" type="radio" name="source" id="sourceSocial" value="Social Media" required>
+                <input class="form-check-input" type="radio" name="source" id="sourceSocial" value="Social Media" <%= feedbackOldInput.source === "Social Media" ? "checked" : "" %> required>
                 <label class="form-check-label" for="sourceSocial">Social Media</label>
               </div>
             </div>
             <div class="col-12 col-sm-6">
               <div class="form-check">
-                <input class="form-check-input" type="radio" name="source" id="sourceVisit" value="School Visit" required>
+                <input class="form-check-input" type="radio" name="source" id="sourceVisit" value="School Visit" <%= feedbackOldInput.source === "School Visit" ? "checked" : "" %> required>
                 <label class="form-check-label" for="sourceVisit">School Visit</label>
               </div>
             </div>
             <div class="col-12 col-sm-6">
               <div class="form-check">
-                <input class="form-check-input" type="radio" name="source" id="sourceRadio" value="Radio" required>
+                <input class="form-check-input" type="radio" name="source" id="sourceRadio" value="Radio" <%= feedbackOldInput.source === "Radio" ? "checked" : "" %> required>
                 <label class="form-check-label" for="sourceRadio">Radio</label>
               </div>
             </div>
             <div class="col-12 col-sm-6">
               <div class="form-check">
-                <input class="form-check-input" type="radio" name="source" id="sourceFriend" value="Friend" required>
+                <input class="form-check-input" type="radio" name="source" id="sourceFriend" value="Friend" <%= feedbackOldInput.source === "Friend" ? "checked" : "" %> required>
                 <label class="form-check-label" for="sourceFriend">Friend</label>
               </div>
             </div>
             <div class="col-12 col-sm-6">
               <div class="form-check">
-                <input class="form-check-input" type="radio" name="source" id="sourceFriend" value="Friend" required>
-                <label class="form-check-label" for="sourceFriend">Church (SDA)</label>
+                <input class="form-check-input" type="radio" name="source" id="sourceChurch" value="Church (SDA)" <%= feedbackOldInput.source === "Church (SDA)" ? "checked" : "" %> required>
+                <label class="form-check-label" for="sourceChurch">Church (SDA)</label>
               </div>
             </div>
             <div class="col-12 col-sm-6">
               <div class="form-check">
-                <input class="form-check-input" type="radio" name="source" id="sourceWebsite" value="Website Search" required>
+                <input class="form-check-input" type="radio" name="source" id="sourceWebsite" value="Website Search" <%= feedbackOldInput.source === "Website Search" ? "checked" : "" %> required>
                 <label class="form-check-label" for="sourceWebsite">Website Search</label>
               </div>
             </div>
             <div class="col-12 col-sm-6">
               <div class="form-check">
-                <input class="form-check-input" type="radio" name="source" id="sourceOther" value="Other" required>
+                <input class="form-check-input" type="radio" name="source" id="sourceOther" value="Other" <%= feedbackOldInput.source === "Other" ? "checked" : "" %> required>
                 <label class="form-check-label" for="sourceOther">Other</label>
               </div>
             </div>
@@ -126,16 +138,18 @@
           <div class="row g-2">
             <% [1, 2, 3, 4, 5].forEach((rating) => { %>
               <div class="col">
-                <button type="button" class="rating-button w-100 text-center fw-semibold py-3" data-rating="<%= rating %>"><%= rating %></button>
+                <button type="button" class="rating-button w-100 text-center fw-semibold py-3 <%= String(feedbackOldInput.rating || '') === String(rating) ? 'selected' : '' %>" data-rating="<%= rating %>"><%= rating %></button>
               </div>
             <% }) %>
           </div>
-          <input type="hidden" id="rating" name="rating" required>
+          <input type="hidden" id="rating" name="rating" value="<%= feedbackOldInput.rating || '' %>" required>
+          <div class="form-text">Choose a rating from 1 to 5.</div>
         </div>
 
         <div class="mb-4">
           <label for="comment" class="form-label fw-semibold">Comment</label>
-          <textarea id="comment" name="comment" class="form-control" rows="5" placeholder="Share any additional thoughts..."></textarea>
+          <textarea id="comment" name="comment" class="form-control" rows="5" placeholder="Share any additional thoughts..." maxlength="700"><%= feedbackOldInput.comment || '' %></textarea>
+          <div class="form-text">Optional, maximum 700 characters.</div>
         </div>
 
         <button type="submit" class="btn btn-primary btn-lg w-100">Submit Feedback</button>

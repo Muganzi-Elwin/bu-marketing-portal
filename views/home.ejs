@@ -16,15 +16,21 @@
 
     .hero-section {
       background: linear-gradient(135deg, #eef5ff 0%, #ffffff 100%);
-      border-radius: 1.25rem;
+      border-radius: 1.5rem;
+      margin-left: -1rem;
+      margin-right: -1rem;
+    }
+
+    .hero-content {
+      max-width: 980px;
     }
 
     .hero-img {
-      width: 100%;
-      max-height: 420px;
+      width: 120%;
+      max-height: 550px;
       object-fit: cover;
-      border-radius: 1rem;
-      box-shadow: 0 0.75rem 1.5rem rgba(15, 23, 42, 0.12);
+      border-radius: 1.2rem;
+      box-shadow: 0 0.75rem 1.5rem rgba(0, 0, 0, 0.12);
       transition: transform 0.3s ease;
       cursor: pointer;
     }
@@ -97,6 +103,33 @@
       background-color: #0b5ed7;
       border-color: #0b5ed7;
     }
+
+    .hero-apply-btn {
+      box-shadow: 0 0.45rem 1rem rgba(11, 94, 215, 0.22);
+      transition: transform 0.25s ease, box-shadow 0.25s ease;
+    }
+
+    .hero-apply-btn:hover {
+      transform: translateY(-2px) scale(1.03);
+      box-shadow: 0 0.75rem 1.5rem rgba(11, 94, 215, 0.3);
+    }
+
+    .hero-apply-btn:active {
+      transform: translateY(0) scale(0.98);
+      box-shadow: 0 0.35rem 0.8rem rgba(11, 94, 215, 0.22);
+    }
+
+    @media (max-width: 767.98px) {
+      .hero-section {
+        margin-left: 0;
+        margin-right: 0;
+      }
+
+      .hero-img {
+        max-height: 340px;
+        border-radius: 1rem;
+      }
+    }
   </style>
 </head>
 <body>
@@ -112,20 +145,20 @@
   <% } %>
 
   <section class="hero-section text-center p-4 p-md-5 mb-5 shadow-sm">
-    <div class="mx-auto" style="max-width: 760px;">
-      <img src="/images/Hero-Image.jpeg" alt="Bugema University students" class="hero-img img-fluid mb-4" data-bs-toggle="modal" data-bs-target="#heroImagePreviewModal" data-img="/images/Hero-Image.jpeg" data-title="Apply to Bugema University">
+    <div class="hero-content mx-auto">
+      <img src="/images/Hero-Image.jpeg" alt="Bugema University students" class="hero-img img-fluid mb-5" data-bs-toggle="modal" data-bs-target="#heroImagePreviewModal" data-img="/images/Hero-Image.jpeg" data-title="Apply to Bugema University">
 
       <h1 class="display-4 fw-bold mb-3">Apply to Bugema University</h1>
       <p class="fs-5 text-muted mb-4">Start your journey to excellence.</p>
 
       <div class="d-flex flex-column flex-sm-row gap-3 justify-content-center">
         <a href="/programs" class="btn btn-outline-primary btn-lg px-4">Explore Programs</a>
-        <a href="/admission" class="btn btn-primary btn-lg px-4">Apply Now</a>
+        <a href="/admission" class="btn btn-primary btn-lg px-4 hero-apply-btn">Apply Now</a>
       </div>
     </div>
   </section>
 
-  <section class="mb-5">
+  <section id="featuredPrograms" class="mb-5">
     <h2 class="section-title fw-bold pb-2 mb-4">Featured Programs</h2>
 
     <div class="row g-4">

@@ -7,14 +7,15 @@ import Feedback from "../models/feedbackModel.js";
 import ScholarshipApplication from "../models/scholarshipModel.js";
 import BursaryApplication from "../models/bursaryModel.js";
 import WorkApplication from "../models/workApplicationModel.js";
+import {
+  validateAdmission,
+  validateBursary,
+  validateQuickApply,
+  validateScholarship,
+  validateWorkApplication
+} from "../utils/validators.js";
 
 const router = express.Router();
-const registrationNumberRegex = /^\d{2}\/[A-Z]{2,5}\/BU\/R\/\d{4}$/;
-const registrationNumberError = "Invalid registration number format. Use 24/BSE/BU/R/0005";
-
-const continuingRegistrationNumberIsInvalid = (applicantType, registrationNumber) => {
-  return applicantType === "continuing" && !registrationNumberRegex.test(registrationNumber || "");
-};
 
 router.get("/programs-data", async (req, res) => {
   try {
@@ -29,9 +30,17 @@ router.get("/programs-data", async (req, res) => {
 router.post("/quick-apply", async (req, res) => {
   try {
     const { fullName, email, phone, program } = req.body;
+    const validation = validateQuickApply(req.body);
 
-    if (!fullName || !email || !phone || !program) {
-      return res.status(400).send("Missing required fields");
+    if (!validation.isValid) {
+      const programs = await Program.find().sort({ name: 1 }).lean();
+
+      return res.status(400).render("quickApply", {
+        errors: validation.errors,
+        oldInput: req.body,
+        programs,
+        selectedProgram: program || ""
+      });
     }
 
     const quickApply = new QuickApply({
@@ -43,7 +52,7 @@ router.post("/quick-apply", async (req, res) => {
 
     await quickApply.save();
 
-    res.redirect("/feedback");
+    res.redirect("/feedback?source=quick-apply");
   } catch (error) {
     console.error("Error submitting quick apply form:", error);
     res.status(500).send("Error submitting quick apply form");
@@ -73,8 +82,9 @@ router.post("/feedback", async (req, res) => {
   }
 });
 
-router.post("/scholarships/academic", upload.array("documents"), async (req, res) => {
+router.post("/scholarships/academic", upload.array("documents", 5), async (req, res) => {
   try {
+    const type = "Academic Excellence Scholarship";
     const {
       applicantType,
       fullName,
@@ -83,19 +93,19 @@ router.post("/scholarships/academic", upload.array("documents"), async (req, res
       yearOfStudy,
       academicGrades
     } = req.body;
+    const validation = validateScholarship({ ...req.body, type });
 
-    if (!applicantType || !fullName || !contact || !academicGrades) {
-      return res.status(400).send("Missing required fields");
-    }
-
-    if (continuingRegistrationNumberIsInvalid(applicantType, registrationNumber)) {
-      return res.status(400).send(registrationNumberError);
+    if (!validation.isValid) {
+      return res.status(400).render("academicScholarship", {
+        errors: validation.errors,
+        oldInput: req.body
+      });
     }
 
     const documentPaths = req.files ? req.files.map((file) => file.path) : [];
 
     const application = new ScholarshipApplication({
-      type: "Academic Excellence Scholarship",
+      type,
       applicantType,
       fullName,
       contact,
@@ -115,8 +125,9 @@ router.post("/scholarships/academic", upload.array("documents"), async (req, res
   }
 });
 
-router.post("/scholarships/sports", upload.array("documents"), async (req, res) => {
+router.post("/scholarships/sports", upload.array("documents", 5), async (req, res) => {
   try {
+    const type = "Sports Scholarship";
     const {
       applicantType,
       fullName,
@@ -126,19 +137,19 @@ router.post("/scholarships/sports", upload.array("documents"), async (req, res) 
       sportType,
       achievements
     } = req.body;
+    const validation = validateScholarship({ ...req.body, type });
 
-    if (!applicantType || !fullName || !contact || !sportType || !achievements) {
-      return res.status(400).send("Missing required fields");
-    }
-
-    if (continuingRegistrationNumberIsInvalid(applicantType, registrationNumber)) {
-      return res.status(400).send(registrationNumberError);
+    if (!validation.isValid) {
+      return res.status(400).render("sportsScholarship", {
+        errors: validation.errors,
+        oldInput: req.body
+      });
     }
 
     const documentPaths = req.files ? req.files.map((file) => file.path) : [];
 
     const application = new ScholarshipApplication({
-      type: "Sports Scholarship",
+      type,
       applicantType,
       fullName,
       contact,
@@ -158,8 +169,9 @@ router.post("/scholarships/sports", upload.array("documents"), async (req, res) 
   }
 });
 
-router.post("/bursaries/needy", upload.array("documents"), async (req, res) => {
+router.post("/bursaries/needy", upload.array("documents", 5), async (req, res) => {
   try {
+    const type = "Needy-Based Bursary";
     const {
       applicantType,
       fullName,
@@ -169,19 +181,19 @@ router.post("/bursaries/needy", upload.array("documents"), async (req, res) => {
       familyIncome,
       backgroundInfo
     } = req.body;
+    const validation = validateBursary({ ...req.body, type });
 
-    if (!applicantType || !fullName || !contact || !familyIncome || !backgroundInfo) {
-      return res.status(400).send("Missing required fields");
-    }
-
-    if (continuingRegistrationNumberIsInvalid(applicantType, registrationNumber)) {
-      return res.status(400).send(registrationNumberError);
+    if (!validation.isValid) {
+      return res.status(400).render("needyBursary", {
+        errors: validation.errors,
+        oldInput: req.body
+      });
     }
 
     const documentPaths = req.files ? req.files.map((file) => file.path) : [];
 
     const application = new BursaryApplication({
-      type: "Needy-Based Bursary",
+      type,
       applicantType,
       fullName,
       contact,
@@ -201,8 +213,9 @@ router.post("/bursaries/needy", upload.array("documents"), async (req, res) => {
   }
 });
 
-router.post("/bursaries/church", upload.array("documents"), async (req, res) => {
+router.post("/bursaries/church", upload.array("documents", 5), async (req, res) => {
   try {
+    const type = "Church Sponsorship";
     const {
       applicantType,
       fullName,
@@ -212,19 +225,19 @@ router.post("/bursaries/church", upload.array("documents"), async (req, res) => 
       churchName,
       recommendationDetails
     } = req.body;
+    const validation = validateBursary({ ...req.body, type });
 
-    if (!applicantType || !fullName || !contact || !churchName || !recommendationDetails) {
-      return res.status(400).send("Missing required fields");
-    }
-
-    if (continuingRegistrationNumberIsInvalid(applicantType, registrationNumber)) {
-      return res.status(400).send(registrationNumberError);
+    if (!validation.isValid) {
+      return res.status(400).render("churchSponsorship", {
+        errors: validation.errors,
+        oldInput: req.body
+      });
     }
 
     const documentPaths = req.files ? req.files.map((file) => file.path) : [];
 
     const application = new BursaryApplication({
-      type: "Church Sponsorship",
+      type,
       applicantType,
       fullName,
       contact,
@@ -247,13 +260,14 @@ router.post("/bursaries/church", upload.array("documents"), async (req, res) => 
 router.post("/work/apply", async (req, res) => {
   try {
     const { fullName, contact, registrationNumber, selectedRole } = req.body;
+    const validation = validateWorkApplication(req.body);
 
-    if (!fullName || !contact || !registrationNumber || !selectedRole) {
-      return res.status(400).send("Missing required fields");
-    }
-
-    if (!registrationNumberRegex.test(registrationNumber)) {
-      return res.status(400).send(registrationNumberError);
+    if (!validation.isValid) {
+      return res.status(400).render("workApplication", {
+        errors: validation.errors,
+        oldInput: req.body,
+        selectedRole: selectedRole || ""
+      });
     }
 
     const application = new WorkApplication({
@@ -265,7 +279,7 @@ router.post("/work/apply", async (req, res) => {
 
     await application.save();
 
-    res.redirect("/success?type=work");
+    res.redirect("/feedback?source=work-program");
   } catch (error) {
     console.error("Error submitting work application:", error);
     res.status(500).send("Error submitting work application");
@@ -273,7 +287,7 @@ router.post("/work/apply", async (req, res) => {
 });
 
 // Handle Admission Form
-router.post("/admission", upload.array("documents", 10), async (req, res) => {
+router.post("/admission", upload.array("documents", 5), async (req, res) => {
 
   try {
     console.log("BODY:", req.body);
@@ -290,13 +304,30 @@ router.post("/admission", upload.array("documents", 10), async (req, res) => {
       intake
     } = req.body;
 
-    // Validation
-    if (!fullName || !email || !phone) {
-      return res.status(400).send("Missing required fields");
+    const validation = validateAdmission(req.body);
+    const errors = [...validation.errors];
+
+    if (!dob) {
+      errors.push("Date of birth is required.");
+    }
+
+    if (!intake) {
+      errors.push("Preferred intake is required.");
     }
 
     if (!req.files || req.files.length === 0) {
-      return res.status(400).send("Please upload a document");
+      errors.push("Please upload at least one document.");
+    }
+
+    if (errors.length > 0) {
+      const programs = await Program.find().sort({ name: 1 }).lean();
+
+      return res.status(400).render("admission", {
+        errors,
+        oldInput: req.body,
+        programs,
+        selectedProgram: selectedProgram || ""
+      });
     }
 
     const documentPaths = req.files ? req.files.map(file => file.path) : [];

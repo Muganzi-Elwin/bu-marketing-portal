@@ -42,12 +42,24 @@
 <%- include('partials/navbar') %>
 
 <main class="container bursary-container py-5">
+  <% const formOldInput = typeof oldInput !== "undefined" ? oldInput : {}; %>
+
   <section class="card header-card shadow-sm text-center mb-4">
     <div class="card-body p-4 p-md-5">
       <h1 class="fw-bold mb-2">Needy-Based Bursary</h1>
       <p class="text-muted fs-5 mb-0">Application Form</p>
     </div>
   </section>
+
+  <% if (typeof errors !== "undefined" && errors.length > 0) { %>
+    <div class="alert alert-danger shadow-sm rounded-3">
+      <ul class="mb-0">
+        <% errors.forEach((error) => { %>
+          <li><%= error %></li>
+        <% }) %>
+      </ul>
+    </div>
+  <% } %>
 
   <section class="card form-card shadow-sm">
     <div class="card-body p-4 p-md-5">
@@ -58,14 +70,14 @@
           <div class="d-grid gap-3">
             <div class="applicant-option">
               <label class="form-check-label d-flex align-items-center gap-3" for="applicantNew">
-                <input class="form-check-input m-0" type="radio" name="applicantType" id="applicantNew" value="new" checked required>
+                <input class="form-check-input m-0" type="radio" name="applicantType" id="applicantNew" value="new" <%= formOldInput.applicantType !== "continuing" ? "checked" : "" %> required>
                 <span class="fs-5">New Applicant</span>
               </label>
             </div>
 
             <div class="applicant-option">
               <label class="form-check-label d-flex align-items-center gap-3" for="applicantContinuing">
-                <input class="form-check-input m-0" type="radio" name="applicantType" id="applicantContinuing" value="continuing" required>
+                <input class="form-check-input m-0" type="radio" name="applicantType" id="applicantContinuing" value="continuing" <%= formOldInput.applicantType === "continuing" ? "checked" : "" %> required>
                 <span class="fs-5">Continuing Student</span>
               </label>
             </div>
@@ -74,18 +86,19 @@
 
         <div class="mb-4">
           <label for="fullName" class="form-label fw-semibold fs-5">Full Name: <span class="text-muted">*</span></label>
-          <input type="text" id="fullName" name="fullName" class="form-control form-control-lg" placeholder="Enter your full name" required>
+          <input type="text" id="fullName" name="fullName" class="form-control form-control-lg" placeholder="Enter your full name" value="<%= formOldInput.fullName || '' %>" maxlength="80" required>
+          <div class="form-text">Use your full legal name, 2 to 80 characters.</div>
         </div>
 
         <div class="mb-4">
           <label for="contact" class="form-label fw-semibold fs-5">Contact (Email/Phone): <span class="text-muted">*</span></label>
-          <input type="text" id="contact" name="contact" class="form-control form-control-lg" placeholder="Email or phone number" required>
+          <input type="text" id="contact" name="contact" class="form-control form-control-lg" placeholder="Email or phone number" value="<%= formOldInput.contact || '' %>" maxlength="120" required>
         </div>
 
         <div id="continuingFields" class="d-none">
           <div class="mb-4">
             <label for="registrationNumber" class="form-label fw-semibold fs-5">Student Registration Number: <span class="text-muted">*</span></label>
-            <input type="text" id="registrationNumber" name="registrationNumber" class="form-control form-control-lg" placeholder="24/BSE/BU/R/0005" pattern="^\d{2}/[A-Z]{2,5}/BU/R/\d{4}$" title="Format: 24/BSE/BU/R/0005">
+            <input type="text" id="registrationNumber" name="registrationNumber" class="form-control form-control-lg" placeholder="24/BSE/BU/R/0005" pattern="^\d{2}/[A-Z]{2,5}/BU/R/\d{4}$" title="Format: 24/BSE/BU/R/0005" value="<%= formOldInput.registrationNumber || '' %>">
             <div class="form-text">Format: 24/BSE/BU/R/0005</div>
           </div>
 
@@ -93,22 +106,23 @@
             <label for="yearOfStudy" class="form-label fw-semibold fs-5">Year of Study: <span class="text-muted">*</span></label>
             <select id="yearOfStudy" name="yearOfStudy" class="form-select form-select-lg">
               <option value="">-- Select Year --</option>
-              <option value="Year 1">Year 1</option>
-              <option value="Year 2">Year 2</option>
-              <option value="Year 3">Year 3</option>
-              <option value="Year 4">Year 4</option>
+              <option value="Year 1" <%= formOldInput.yearOfStudy === "Year 1" ? "selected" : "" %>>Year 1</option>
+              <option value="Year 2" <%= formOldInput.yearOfStudy === "Year 2" ? "selected" : "" %>>Year 2</option>
+              <option value="Year 3" <%= formOldInput.yearOfStudy === "Year 3" ? "selected" : "" %>>Year 3</option>
+              <option value="Year 4" <%= formOldInput.yearOfStudy === "Year 4" ? "selected" : "" %>>Year 4</option>
             </select>
           </div>
         </div>
 
         <div class="mb-4">
           <label for="familyIncome" class="form-label fw-semibold fs-5">Family Income: <span class="text-muted">*</span></label>
-          <input type="text" id="familyIncome" name="familyIncome" class="form-control form-control-lg" placeholder="Approximate monthly family income" required>
+          <input type="text" id="familyIncome" name="familyIncome" class="form-control form-control-lg" placeholder="Approximate monthly family income" value="<%= formOldInput.familyIncome || '' %>" maxlength="120" required>
         </div>
 
         <div class="mb-4">
           <label for="backgroundInfo" class="form-label fw-semibold fs-5">Background Information: <span class="text-muted">*</span></label>
-          <textarea id="backgroundInfo" name="backgroundInfo" rows="6" class="form-control form-control-lg" placeholder="Explain your family's financial situation and why you need this bursary..." required></textarea>
+          <textarea id="backgroundInfo" name="backgroundInfo" rows="6" class="form-control form-control-lg" placeholder="Explain your family's financial situation and why you need this bursary..." maxlength="1000" required><%= formOldInput.backgroundInfo || '' %></textarea>
+          <div class="form-text">Maximum 1000 characters.</div>
         </div>
 
         <div class="mb-4">

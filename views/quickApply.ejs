@@ -25,6 +25,11 @@
 <%- include('partials/navbar') %>
 
 <main class="container quick-apply-container py-5">
+  <%
+    const quickApplyOldInput = typeof oldInput !== "undefined" ? oldInput : {};
+    const quickApplySelectedProgram = quickApplyOldInput.program || selectedProgram || "";
+  %>
+
   <div class="text-center mb-4">
     <h1 class="fw-bold mb-2">Quick Apply Form</h1>
     <p class="text-muted fs-5 mb-0">Express Your Interest - Simple Marketing Form</p>
@@ -38,22 +43,34 @@
     <div class="alert alert-danger shadow-sm rounded-3"><%= errorMessage %></div>
   <% } %>
 
+  <% if (typeof errors !== "undefined" && errors.length > 0) { %>
+    <div class="alert alert-danger shadow-sm rounded-3">
+      <ul class="mb-0">
+        <% errors.forEach((error) => { %>
+          <li><%= error %></li>
+        <% }) %>
+      </ul>
+    </div>
+  <% } %>
+
   <div class="card form-card shadow-sm">
     <div class="card-body p-4 p-md-5">
       <form action="/quick-apply" method="POST">
         <div class="mb-3">
           <label for="fullName" class="form-label">Full Name</label>
-          <input type="text" id="fullName" name="fullName" class="form-control form-control-lg" required>
+          <input type="text" id="fullName" name="fullName" class="form-control form-control-lg" value="<%= quickApplyOldInput.fullName || '' %>" placeholder="Enter your full name" maxlength="80" required>
+          <div class="form-text">Use your full legal name, 2 to 80 characters.</div>
         </div>
 
         <div class="mb-3">
           <label for="email" class="form-label">Email</label>
-          <input type="email" id="email" name="email" class="form-control form-control-lg" required>
+          <input type="email" id="email" name="email" class="form-control form-control-lg" value="<%= quickApplyOldInput.email || '' %>" placeholder="example@gmail.com" maxlength="120" required>
         </div>
 
         <div class="mb-3">
           <label for="phone" class="form-label">Phone Number</label>
-          <input type="text" id="phone" name="phone" class="form-control form-control-lg" required>
+          <input type="text" id="phone" name="phone" class="form-control form-control-lg" value="<%= quickApplyOldInput.phone || '' %>" placeholder="+256 701 234 567" maxlength="120" required>
+          <div class="form-text">Use digits, spaces, +, or hyphens.</div>
         </div>
 
         <div class="mb-4">
@@ -61,7 +78,7 @@
           <select id="program" name="program" class="form-select form-select-lg" required>
             <option value="">-- Select Program --</option>
             <% (programs || []).forEach((program) => { %>
-              <option value="<%= program.name %>" <%= selectedProgram === program.name ? "selected" : "" %>><%= program.name %></option>
+              <option value="<%= program.name %>" <%= quickApplySelectedProgram === program.name ? "selected" : "" %>><%= program.name %></option>
             <% }) %>
           </select>
         </div>

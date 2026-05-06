@@ -8,7 +8,7 @@ if (!fs.existsSync(uploadDir)) {
   fs.mkdirSync(uploadDir, { recursive: true });
 }
 
-const allowedFileTypes = ["application/pdf", "image/jpeg", "image/png", "image/gif", "image/webp"];
+const allowedFileTypes = ["application/pdf", "image/jpeg", "image/png"];
 
 const storage = multer.diskStorage({
   destination: uploadDir,
@@ -22,7 +22,7 @@ const fileFilter = (req, file, cb) => {
   if (allowedFileTypes.includes(file.mimetype)) {
     cb(null, true);
   } else {
-    cb(new Error("Invalid file type. Only PDF and image files are allowed."));
+    cb(new Error("Invalid file type. Only PDF, JPEG, and PNG files are allowed."));
   }
 };
 

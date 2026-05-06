@@ -1,9 +1,21 @@
 body {
   font-family: Arial, Helvetica, sans-serif;
-  background: #eef2f6;
+  background: linear-gradient(180deg, #eef4fb 0%, #f7f9fc 45%, #eef2f6 100%);
+  background-attachment: fixed;
   color: #333;
   font-size: 18px;
   line-height: 1.6;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+main {
+  overflow-x: hidden;
 }
 
 .card,
@@ -12,6 +24,23 @@ body {
 .filter-card,
 .school-card {
   background: #fff;
+  border-radius: 1rem;
+  box-shadow: 0 0.45rem 1.25rem rgba(15, 23, 42, 0.07);
+}
+
+.table-responsive {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.table-responsive table {
+  min-width: 720px;
+}
+
+.form-control,
+.form-select,
+textarea {
+  max-width: 100%;
 }
 
 .navbar-custom {
@@ -20,13 +49,34 @@ body {
   padding: 18px 20px;
 }
 
+.navbar-custom .navbar-inner {
+  align-items: center;
+  display: flex;
+  gap: 2rem;
+  justify-content: space-between;
+  padding-left: 0.75rem;
+  padding-right: 1rem;
+  max-width: 100%;
+}
+
+.navbar-custom .navbar-collapse {
+  justify-content: flex-end;
+}
+
+.navbar-custom .navbar-nav {
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 4px;
+  justify-content: flex-end;
+}
+
 .navbar-custom .nav-link {
   color: white !important;
-  font-weight: 600;
-  font-size: 18px;
-  padding: 8px 14px !important;
+  font-weight: 700;
+  font-size: 1.06rem;
+  padding: 9px 15px !important;
   border-radius: 8px;
-  margin: 0 4px;
+  margin: 0 5px;
   transition: background-color 0.2s ease, color 0.2s ease;
 }
 
@@ -43,8 +93,21 @@ body {
 
 .navbar-custom .navbar-brand {
   color: white !important;
-  font-weight: bold;
-  font-size: 1.35rem;
+  font-weight: 800;
+  gap: 0.55rem !important;
+  margin-right: 2rem;
+  min-width: 0;
+  flex-shrink: 0;
+}
+
+.portal-brand {
+  color: white;
+  font-size: 1.75rem;
+  font-weight: 800;
+  letter-spacing: 0.7px;
+  line-height: 1.1;
+  text-shadow: 0 2px 6px rgba(0, 0, 0, 0.18);
+  white-space: nowrap;
 }
 
 .navbar-custom .navbar-toggler {
@@ -61,7 +124,7 @@ body {
 
 .navbar-logo {
   height: 140px;
-  margin-right: 10px;
+  margin-right: 0;
 }
 
 footer {
@@ -69,6 +132,7 @@ footer {
   color: white;
   text-align: center;
   padding: 28px 20px;
+  overflow-x: hidden;
 }
 
 footer a {
@@ -89,6 +153,7 @@ footer a:hover {
   justify-content: center;
   gap: 16px;
   flex-wrap: wrap;
+  max-width: 100%;
 }
 
 .footer-social-links a {
@@ -164,26 +229,107 @@ a {
   font-weight: 700;
 }
 
+@media (max-width: 1199.98px) and (min-width: 992px) {
+  .navbar-custom .navbar-inner {
+    gap: 1rem;
+    padding-left: 0.35rem;
+    padding-right: 0.35rem;
+  }
+
+  .navbar-logo {
+    height: 110px;
+  }
+
+  .portal-brand {
+    font-size: 1.45rem;
+  }
+
+  .navbar-custom .nav-link {
+    font-size: 0.98rem;
+    margin: 0 2px;
+    padding: 8px 10px !important;
+  }
+}
+
 @media (max-width: 991.98px) {
   .navbar-custom {
     padding: 14px 16px;
+  }
+
+  .navbar-custom .navbar-inner {
+    gap: 1rem;
+    padding-left: 0.25rem;
+    padding-right: 0.25rem;
   }
 
   .navbar-logo {
     height: 72px;
   }
 
-  .navbar-custom .navbar-brand {
-    font-size: 1.1rem;
+  .portal-brand {
+    font-size: 1.25rem;
+    letter-spacing: 0.4px;
   }
 
   .navbar-custom .navbar-nav {
+    align-items: stretch;
     gap: 6px;
     padding-top: 14px;
   }
 
+  .navbar-custom .navbar-brand {
+    margin-right: 0.75rem;
+  }
+
   .navbar-custom .nav-link {
     margin: 0;
+    width: 100%;
+  }
+
+  .row {
+    --bs-gutter-x: 1rem;
+  }
+}
+
+@media (max-width: 575.98px) {
+  body {
+    font-size: 17px;
+  }
+
+  .portal-brand {
+    font-size: 1.08rem;
+    letter-spacing: 0.2px;
+    white-space: normal;
+  }
+
+  .navbar-custom {
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+
+  .navbar-custom .navbar-brand {
+    max-width: calc(100% - 58px);
+  }
+
+  .navbar-logo {
+    height: 62px;
+  }
+
+  .card,
+  .form-card,
+  .header-card,
+  .filter-card,
+  .school-card {
+    border-radius: 0.85rem;
+  }
+
+  .container,
+  .container-fluid {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+
+  form .btn[type="submit"] {
     width: 100%;
   }
 }

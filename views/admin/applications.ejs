@@ -24,6 +24,8 @@
     .status-pending { background: #fff7df; color: #946200; }
     .status-approved { background: #e8f7ee; color: #146c43; }
     .status-default { background: #eef2f6; color: #475569; }
+    .document-links { display: flex; flex-wrap: wrap; gap: 0.4rem; min-width: 130px; }
+    .document-link { white-space: nowrap; }
     @media (max-width: 991.98px) { .admin-layout { flex-direction: column; } .admin-sidebar { width: 100%; min-height: auto; } .admin-main { padding: 1.25rem; } }
   </style>
 </head>
@@ -40,6 +42,30 @@
       if (status === "Approved") return "status-approved";
       return "status-default";
     };
+
+    const getDocumentPaths = (application) => {
+      const paths = [];
+
+      if (Array.isArray(application.documentPaths)) {
+        paths.push(...application.documentPaths);
+      }
+
+      if (application.documentPath) {
+        paths.push(application.documentPath);
+      }
+
+      if (Array.isArray(application.documents)) {
+        paths.push(...application.documents);
+      }
+
+      return [...new Set(paths.filter(Boolean))];
+    };
+
+    const documentHref = (path) => {
+      const cleanPath = String(path).replace(/\\/g, "/");
+      return cleanPath.startsWith("/") ? cleanPath : `/${cleanPath}`;
+    };
+
   %>
 
   <div class="admin-layout">
@@ -68,19 +94,31 @@
                 <th>Name</th>
                 <th>Contact/Email</th>
                 <th>Program</th>
+                <th>Documents</th>
                 <th>Status</th>
                 <th>Date Submitted</th>
               </tr>
             </thead>
             <tbody>
               <% if ((admissions || []).length === 0) { %>
-                <tr><td colspan="5" class="text-muted text-center py-4">No full admission applications yet.</td></tr>
+                <tr><td colspan="6" class="text-muted text-center py-4">No full admission applications yet.</td></tr>
               <% } %>
               <% (admissions || []).forEach((application) => { %>
                 <tr>
                   <td class="fw-semibold"><%= application.fullName %></td>
                   <td><%= application.email %><br><span class="text-muted small"><%= application.phone %></span></td>
                   <td><%= application.selectedProgram || "N/A" %></td>
+                  <td>
+                    <div class="document-links">
+                      <% const documents = getDocumentPaths(application); %>
+                      <% if (documents.length === 0) { %>
+                        <span class="text-muted small">No documents uploaded</span>
+                      <% } %>
+                      <% documents.forEach((path, index) => { %>
+                        <a href="<%= documentHref(path) %>" class="btn btn-sm btn-outline-primary document-link" target="_blank" rel="noopener">Document <%= index + 1 %></a>
+                      <% }) %>
+                    </div>
+                  </td>
                   <td><span class="status-badge status-default">Submitted</span></td>
                   <td><%= formatDate(application.createdAt) %></td>
                 </tr>
@@ -134,19 +172,31 @@
                 <th>Name</th>
                 <th>Contact/Email</th>
                 <th>Type</th>
+                <th>Documents</th>
                 <th>Status</th>
                 <th>Date Submitted</th>
               </tr>
             </thead>
             <tbody>
               <% if ((scholarships || []).length === 0) { %>
-                <tr><td colspan="5" class="text-muted text-center py-4">No scholarship applications yet.</td></tr>
+                <tr><td colspan="6" class="text-muted text-center py-4">No scholarship applications yet.</td></tr>
               <% } %>
               <% (scholarships || []).forEach((application) => { %>
                 <tr>
                   <td class="fw-semibold"><%= application.fullName %></td>
                   <td><%= application.contact || "N/A" %></td>
                   <td><%= application.type || "N/A" %></td>
+                  <td>
+                    <div class="document-links">
+                      <% const documents = getDocumentPaths(application); %>
+                      <% if (documents.length === 0) { %>
+                        <span class="text-muted small">No documents uploaded</span>
+                      <% } %>
+                      <% documents.forEach((path, index) => { %>
+                        <a href="<%= documentHref(path) %>" class="btn btn-sm btn-outline-primary document-link" target="_blank" rel="noopener">Document <%= index + 1 %></a>
+                      <% }) %>
+                    </div>
+                  </td>
                   <td><span class="status-badge <%= statusClass(application.status) %>"><%= application.status || "Submitted" %></span></td>
                   <td><%= formatDate(application.createdAt) %></td>
                 </tr>
@@ -167,19 +217,31 @@
                 <th>Name</th>
                 <th>Contact/Email</th>
                 <th>Type</th>
+                <th>Documents</th>
                 <th>Status</th>
                 <th>Date Submitted</th>
               </tr>
             </thead>
             <tbody>
               <% if ((bursaries || []).length === 0) { %>
-                <tr><td colspan="5" class="text-muted text-center py-4">No bursary applications yet.</td></tr>
+                <tr><td colspan="6" class="text-muted text-center py-4">No bursary applications yet.</td></tr>
               <% } %>
               <% (bursaries || []).forEach((application) => { %>
                 <tr>
                   <td class="fw-semibold"><%= application.fullName %></td>
                   <td><%= application.contact || "N/A" %></td>
                   <td><%= application.type || "N/A" %></td>
+                  <td>
+                    <div class="document-links">
+                      <% const documents = getDocumentPaths(application); %>
+                      <% if (documents.length === 0) { %>
+                        <span class="text-muted small">No documents uploaded</span>
+                      <% } %>
+                      <% documents.forEach((path, index) => { %>
+                        <a href="<%= documentHref(path) %>" class="btn btn-sm btn-outline-primary document-link" target="_blank" rel="noopener">Document <%= index + 1 %></a>
+                      <% }) %>
+                    </div>
+                  </td>
                   <td><span class="status-badge <%= statusClass(application.status) %>"><%= application.status || "Submitted" %></span></td>
                   <td><%= formatDate(application.createdAt) %></td>
                 </tr>

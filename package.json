@@ -1,14 +1,23 @@
 {
   "name": "bu-marketing-portal",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "B-U Marketing Portal for program exploration, admission, applications, feedback, and admin analytics.",
+  "main": "app.js",
   "type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node app.js",
+    "dev": "node app.js",
+    "test": "echo \"No tests specified\" && exit 0"
   },
-  "keywords": [],
-  "author": "",
+  "keywords": [
+    "bugema",
+    "marketing",
+    "portal",
+    "express",
+    "mongodb",
+    "ejs"
+  ],
+  "author": "Muganzi Elwin",
   "license": "ISC",
   "dependencies": {
     "dotenv": "^17.4.2",

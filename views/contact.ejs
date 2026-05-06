@@ -57,18 +57,25 @@
     }
 
     .social-icon-link {
-      width: 2.75rem;
-      height: 2.75rem;
-      border-radius: 50%;
+      min-height: 2.75rem;
+      border-radius: 999px;
       display: inline-flex;
       align-items: center;
       justify-content: center;
+      gap: 0.45rem;
+      padding: 0.55rem 0.85rem;
       border: 1px solid #d8e2ef;
       background: #fff;
       color: #0055aa;
-      font-size: 1.25rem;
+      font-size: 0.95rem;
+      font-weight: 700;
       box-shadow: 0 0.35rem 0.9rem rgba(15, 23, 42, 0.08);
       transition: transform 0.2s ease, background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+    }
+
+    .social-icon-link i {
+      font-size: 1.25rem;
+      line-height: 1;
     }
 
     .social-icon-link:hover {
@@ -140,6 +147,12 @@
       color: #fff;
       font-size: 1.75rem;
       box-shadow: 0 0.6rem 1.2rem rgba(0, 51, 102, 0.18);
+    }
+
+    @media (max-width: 575.98px) {
+      .social-icon-link {
+        flex: 1 1 135px;
+      }
     }
   </style>
 </head>
@@ -220,17 +233,21 @@
             <div>
               <h3 class="h5 fw-bold mb-3">Social Media</h3>
               <div class="d-flex flex-wrap gap-3">
-                <a class="social-icon-link facebook" href="https://www.facebook.com/share/14aV2tDSDVA/" target="_blank" rel="noopener" aria-label="Facebook">
+                <a class="social-icon-link facebook" href="https://www.facebook.com/share/14aV2tDSDVA/" target="_blank" rel="noopener" aria-label="Facebook" title="Facebook">
                   <i class="bi bi-facebook"></i>
+                  <span>Facebook</span>
                 </a>
-                <a class="social-icon-link youtube" href="https://www.youtube.com/@bugemauniversity3502" target="_blank" rel="noopener" aria-label="YouTube">
+                <a class="social-icon-link youtube" href="https://www.youtube.com/@bugemauniversity3502" target="_blank" rel="noopener" aria-label="YouTube" title="YouTube">
                   <i class="bi bi-youtube"></i>
+                  <span>YouTube</span>
                 </a>
-                <a class="social-icon-link tiktok" href="https://www.tiktok.com/@bugemauniv" target="_blank" rel="noopener" aria-label="TikTok">
+                <a class="social-icon-link tiktok" href="https://www.tiktok.com/@bugemauniv" target="_blank" rel="noopener" aria-label="TikTok" title="TikTok">
                   <i class="bi bi-tiktok"></i>
+                  <span>TikTok</span>
                 </a>
-                <a class="social-icon-link twitter" href="https://x.com/UnivBugema" target="_blank" rel="noopener" aria-label="Twitter/X">
+                <a class="social-icon-link twitter" href="https://x.com/UnivBugema" target="_blank" rel="noopener" aria-label="Twitter/X" title="Twitter/X">
                   <i class="bi bi-twitter-x"></i>
+                  <span>Twitter/X</span>
                 </a>
               
               </div>

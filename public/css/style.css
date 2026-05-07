@@ -146,27 +146,43 @@ footer a:hover {
 }
 
 .footer-social {
+  display: block;
   text-align: center;
 }
 
+.footer-social h6 {
+  color: #fff;
+  font-weight: 700;
+}
+
 .footer-social-links {
-  display: flex;
+  display: flex !important;
+  align-items: center;
   justify-content: center;
   gap: 16px;
   flex-wrap: wrap;
   max-width: 100%;
 }
 
+.footer-social-link,
 .footer-social-links a {
-  width: 2.4rem;
-  height: 2.4rem;
+  width: 42px;
+  height: 42px;
+  min-width: 42px;
+  min-height: 42px;
   border-radius: 50%;
-  display: inline-flex;
+  display: inline-flex !important;
   align-items: center;
   justify-content: center;
   color: white !important;
   font-size: 1.35rem;
   transition: filter 0.2s ease, transform 0.2s ease;
+}
+
+.footer-social-link i,
+.social-icon-link i {
+  display: inline-block;
+  line-height: 1;
 }
 
 .footer-social-links a:hover {
@@ -186,6 +202,16 @@ footer a:hover {
 .footer-social-link.tiktok,
 .footer-social-link.twitter {
   background: #000;
+}
+
+.social-icon-link {
+  width: 44px;
+  height: 44px;
+  min-width: 44px;
+  min-height: 44px;
+  display: inline-flex !important;
+  align-items: center;
+  justify-content: center;
 }
 
 a {
